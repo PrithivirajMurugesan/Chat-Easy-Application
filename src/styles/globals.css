@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #ece5dd;
+  color: #fff;
+}
+
+/* .epr-main {
+   position: absolute;
+   left: 0;
+   bottom: 70px;
+} */
