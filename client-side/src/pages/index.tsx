@@ -38,6 +38,11 @@ const Home: React.FC = () => {
   const [suggestions, setSuggestions] = useState([""]); // sets suggestions for the action
   const [triggerSymbol, setTriggerSymbol] = useState(""); // suggestions symbol triggering
 
+  const [isDivSettings, setIsDivSettings] = useState(false); // right profile div visible
+  const [isRightHovered, setIsRightHovered] = useState(false); // right profile settings icon hovered
+  const [isRightPopupOpen, setRightPopupOpen] = useState(false); // grouping right popup opened
+  const mainRightDivRef = useRef<HTMLDivElement>(null); // right profile settings main div showing
+
   // Store the messages from the socket.io server starts
 
   useEffect(() => {
@@ -229,7 +234,7 @@ const Home: React.FC = () => {
 
   // Choose Emoji picker ends
 
-  // Toogle the clicking more options starts
+  // Toogle the clicking more options on left starts
 
   const toggleDivVisibility = () => {
     setIsDivVisible((prev) => !prev);
@@ -271,7 +276,51 @@ const Home: React.FC = () => {
     setIsHovered(false);
   };
 
-  // Toogle the clicking more options ends
+  // Toogle the clicking more options on left ends
+
+   // Toogle the clicking more options on right starts
+
+   const toggleRightDivVisibility = () => {
+    setIsDivSettings((prev) => !prev);
+    setIsRightHovered((prev) => !prev);
+  };
+
+  const handleClickOutsideRight = (event: MouseEvent) => {
+    if (
+      mainRightDivRef.current &&
+      !mainRightDivRef.current.contains(event.target as Node)
+    ) {
+      setIsDivSettings(false);
+      setIsRightHovered(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDivSettings) {
+      // Add event listener to document
+      document.addEventListener("mousedown", handleClickOutsideRight);
+    } else {
+      // Remove event listener from document
+      document.removeEventListener("mousedown", handleClickOutsideRight);
+    }
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideRight);
+    };
+  }, [isDivSettings]);
+
+  const handleRightOpenPopup = () => {
+    setRightPopupOpen(true);
+  };
+
+  const handleRightClosePopup = () => {
+    setRightPopupOpen(false);
+    setIsDivSettings(false);
+    setIsRightHovered(false);
+  };
+
+  // Toogle the clicking more options on right ends
 
   return (
     <div>
@@ -294,8 +343,8 @@ const Home: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 30 30"
               fill="#111B21"
-              className={`size-10 cursor-pointer mt-[5px] ${
-                isHovered ? "bg-[#fff] rounded-[50px] pt-[6px] pl-[6px]" : ""
+              className={`size-8 cursor-pointer mt-[5px] ${
+                isHovered ? "bg-[#fff] rounded-[50px] pt-[4px] pl-[4px]" : ""
               }`}
               onClick={toggleDivVisibility}
             >
@@ -500,9 +549,12 @@ const Home: React.FC = () => {
               </svg>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
+                viewBox="0 0 30 30"
                 fill="#111B21"
-                className="size-8 cursor-pointer"
+                className={`size-8 cursor-pointer mt-[5px] ${
+                  isRightHovered ? "bg-[#fff] rounded-[50px] pt-[4px] pl-[4px]" : ""
+                }`}
+                onClick={toggleRightDivVisibility}
               >
                 <path
                   fillRule="evenodd"
@@ -510,6 +562,68 @@ const Home: React.FC = () => {
                   clipRule="evenodd"
                 />
               </svg>
+              {isDivSettings && (
+                <div ref={mainRightDivRef} className={Style.rightMain_div}>
+                <div className={Style.rightInner_div}>
+                <ul className="flex flex-col mt-1 mb-1">
+                    <li
+                      className="text-[#111B12] flex gap-3 cursor-pointer"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
+</svg>
+                       Group info
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z" />
+  <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z" />
+</svg>
+                      Selected messages
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+  <path fillRule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+</svg>
+                      Close chats
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM20.57 16.476c-.223.082-.448.161-.674.238L7.319 4.137A6.75 6.75 0 0 1 18.75 9v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206Z" />
+  <path fillRule="evenodd" d="M5.25 9c0-.184.007-.366.022-.546l10.384 10.384a3.751 3.751 0 0 1-7.396-1.119 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clipRule="evenodd" />
+</svg>
+                      Mute notifications
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path fillRule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97ZM6.75 8.25a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H7.5Z" clipRule="evenodd" />
+</svg>
+                      Disappearing messages
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clipRule="evenodd" />
+</svg>
+                      Clear chats
+                    </li>
+
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path fillRule="evenodd" d="M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Zm-10.5 4.5a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z" clipRule="evenodd" />
+</svg>
+                      Exit
+                    </li>
+                  </ul>
+
+                  </div>
+                  </div>
+              )}
             </div>
           </div>
           <div className={Style.chat_area}>

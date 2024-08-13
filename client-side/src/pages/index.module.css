@@ -112,6 +112,23 @@
   @apply flex gap-[26px] items-center;
 }
 
+.rightMain_div {
+  @apply absolute right-[5px] top-[55px] w-[250px] bg-white shadow-lg rounded-[6px] transition-all;
+}
+
+.rightInner_div li {
+  @apply text-[#111B12] p-[15px] text-[14px];
+}
+.rightInner_div li:hover {
+  @apply bg-[#f0f2f5];
+}
+.rightInner_div li:first-child {
+  @apply mt-[4px];
+}
+.rightInner_div li:last-child {
+  @apply pb-[15px];
+}
+
 .form_element {
   @apply w-full fixed bottom-0 bg-[#f0f2f5];
 }
