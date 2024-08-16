@@ -5,8 +5,11 @@
 body {
   background-color: #ece5dd;
   color: #fff;
+  font-family: "Open Sans", sans-serif;
 }
-
+pre {
+  font-family: "Open Sans", sans-serif;
+}
 /* .epr-main {
    position: absolute;
    left: 0;

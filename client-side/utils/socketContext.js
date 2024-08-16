@@ -11,12 +11,21 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketIo = io('http://localhost:4000');
+    const socketIo = io('http://localhost:4000', {
+      transports: ['websocket'],
+    });
 
-    socketIo.on('connect', () => console.log('Connected'));
+    socketIo.on('connect', () => {
+      console.log('Connected');
+    });
+
     setSocket(socketIo);
 
-    return () => socketIo.disconnect();
+    // Clean up when the component unmounts
+    return () => {
+      socketIo.off('connect');
+      socketIo.disconnect();
+    };
   }, []);
 
   return (

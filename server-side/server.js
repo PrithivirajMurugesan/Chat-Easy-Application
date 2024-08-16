@@ -33,6 +33,10 @@ io.on('connection', (socket) => {
       } else if (userMessage === 'what about the invoice?') {
         reply = { userId: 'bot', content: 'Sure, I will send it soon!', timestamp: new Date().toISOString(), type: 'received' };
       }
+      else {
+        // Default response for unrecognized messages
+        reply = { userId: 'bot', content: "Sorry, I can't understand what you asked.", timestamp: new Date().toISOString(), type: 'received' };
+      }
 
       if (reply) {
         setTimeout(() => socket.emit('message', reply), 1000); // Send the reply only to the sender

@@ -22,6 +22,13 @@ interface Message {
   };
 }
 
+interface User {
+  id: number;
+  name: string;
+  lastMessage: string;
+  time: string;
+}
+
 const Home: React.FC = () => {
   const socket = useSocket(); // socket.io
   const [message, setMessage] = useState<string>(""); // messages
@@ -42,6 +49,14 @@ const Home: React.FC = () => {
   const [isRightHovered, setIsRightHovered] = useState(false); // right profile settings icon hovered
   const [isRightPopupOpen, setRightPopupOpen] = useState(false); // grouping right popup opened
   const mainRightDivRef = useRef<HTMLDivElement>(null); // right profile settings main div showing
+
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const handleUserClick = (user : User) => {
+    setSelectedUser(user);
+    // Load user-specific messages here if needed
+  };
+  
 
   // Store the messages from the socket.io server starts
 
@@ -234,6 +249,21 @@ const Home: React.FC = () => {
 
   // Choose Emoji picker ends
 
+// Users Contact Array Starts
+  const users = [
+    { id: 1, name: 'User One', lastMessage: 'last messages', time: '2.27 pm' },
+    { id: 2, name: 'User Two', lastMessage: 'last messages', time: '3.15 pm' },
+    { id: 3, name: 'User Three', lastMessage: 'last messages', time: '4.05 pm' },
+    { id: 4, name: 'User Four', lastMessage: 'last messages', time: '5.11 pm' },
+    { id: 5, name: 'User Five', lastMessage: 'last messages', time: '7.27 pm' },
+    { id: 6, name: 'User Six', lastMessage: 'last messages', time: '9.15 pm' },
+    { id: 7, name: 'User Seven', lastMessage: 'last messages', time: '12.01 pm' }, 
+    // Add more users as needed
+  ];
+
+// Users Contact Array Ends
+
+
   // Toogle the clicking more options on left starts
 
   const toggleDivVisibility = () => {
@@ -310,9 +340,9 @@ const Home: React.FC = () => {
     };
   }, [isDivSettings]);
 
-  const handleRightOpenPopup = () => {
-    setRightPopupOpen(true);
-  };
+  // const handleRightOpenPopup = () => {
+  //   setRightPopupOpen(true);
+  // };
 
   const handleRightClosePopup = () => {
     setRightPopupOpen(false);
@@ -354,11 +384,7 @@ const Home: React.FC = () => {
                 clipRule="evenodd"
               />
             </svg>
-            {isDivVisible && (
-              <div ref={mainDivRef} className={Style.main_div}>
-                <div className={Style.inner_div}>
-                  {isPopupOpen && (
-                    <div className={Style.popup_overlay}>
+                    <div className={`${Style.popup_overlay} ${ isPopupOpen ? Style.popup_slide : ""}`}>
                       <div className={Style.popup_close}>
                         <button onClick={handleClosePopup}>
                           <svg
@@ -403,7 +429,9 @@ const Home: React.FC = () => {
                         <h1>No Contacts found</h1>
                       </div>
                     </div>
-                  )}
+
+              <div ref={mainDivRef} className={`${Style.main_div} ${ isDivVisible && isHovered ? Style.show : "" }`}>
+                <div className={Style.inner_div}>
                   <ul className="flex flex-col mt-1 mb-1">
                     <li
                       className="text-[#111B12] flex gap-3 cursor-pointer"
@@ -475,8 +503,9 @@ const Home: React.FC = () => {
                   </ul>
                 </div>
               </div>
-            )}
+
           </div>
+          <div className={Style.search_filter}>
           <div className={Style.search}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -492,9 +521,52 @@ const Home: React.FC = () => {
             </svg>
             <input type="text" placeholder="Search" />
           </div>
-          <hr />
-        </div>
+          <div className={Style.chat_variety}>
+            <div className={Style.all}>All</div>
+            <div className={Style.unread}>Unread</div>
+            <div className={Style.groups}>Groups</div>
+          </div>
 
+          <hr />
+          </div>
+
+<div className={Style.chats_container}>
+    <div className={Style.all_chats_container}>
+      {users.map((user) => (
+        <div key={user.id} className={Style.individual_chat}  onClick={() => handleUserClick(user)}>
+          <div className={Style.chat_profile}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 26 26"
+              fill="#54656f"
+              className="size-16 cursor-pointer"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className={Style.chat_header}>
+            <div className={Style.users_name}>
+              <p>{user.name}</p>
+            </div>
+            <div className={Style.user_msg}>
+              <p>{user.lastMessage}</p>
+            </div>
+          </div>
+          <div className={Style.time_slots}>
+            <p>{user.time}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+
+        </div>
+        {selectedUser ? (
         <div className={Style.message_container}>
           <div className={Style.profile_settings}>
             <div className={Style.profile_left}>
@@ -527,9 +599,9 @@ const Home: React.FC = () => {
                   />
                 </svg>
                 <div className={Style.profile_name}>
-                  <p className={Style.user_name}>User Name</p>
+                  <p className={Style.user_name}>{selectedUser?.name}</p>
                   <span className={Style.seen_details}>
-                    last seen at 12.12 pm
+                    last seen at <span>{selectedUser?.time}</span>
                   </span>
                 </div>
               </div>
@@ -562,8 +634,8 @@ const Home: React.FC = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              {isDivSettings && (
-                <div ref={mainRightDivRef} className={Style.rightMain_div}>
+             
+                <div ref={mainRightDivRef} className={`${Style.rightMain_div} ${ isDivSettings ? Style.right_popup : ""}`}>
                 <div className={Style.rightInner_div}>
                 <ul className="flex flex-col mt-1 mb-1">
                     <li
@@ -613,7 +685,7 @@ const Home: React.FC = () => {
                       Clear chats
                     </li>
 
-                    <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                    <li className="text-[#111B12] flex gap-3 cursor-pointer" onClick={handleRightClosePopup}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
   <path fillRule="evenodd" d="M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Zm-10.5 4.5a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z" clipRule="evenodd" />
 </svg>
@@ -623,7 +695,7 @@ const Home: React.FC = () => {
 
                   </div>
                   </div>
-              )}
+            
             </div>
           </div>
           <div className={Style.chat_area}>
@@ -707,10 +779,12 @@ const Home: React.FC = () => {
                       </a>
                     ) : (
                       <div className={Style.message_content}>
+                        <pre className="text-wrap">
                         <span className={Style.content}>{msg.content}</span>
                         <span className={Style.timestamp}>
                           {formatTimestamp(msg.timestamp)}
                         </span>
+                        </pre>
                       </div>
                     )}
                   </li>
@@ -787,6 +861,7 @@ const Home: React.FC = () => {
                   backgroundColor: "#fff",
                   borderRadius: "8px",
                   resize: "none", // Optional: prevent resizing
+                  scrollbarWidth : "none",
                 }}
                 rows={1} // Initial number of visible rows
                 onKeyDown={(e) => {
@@ -816,6 +891,7 @@ const Home: React.FC = () => {
                   {suggestions.map((suggestion, index) => (
                     <li
                       key={index}
+                      className={Style.suggestions}
                       style={{
                         padding: "5px",
                         cursor: "pointer",
@@ -841,6 +917,13 @@ const Home: React.FC = () => {
             </form>
           </div>
         </div>
+        ) : <div className={Style.preview_section}>
+          <img src="watsap-preview.png" alt="pre-watsapp"></img>
+          <p className={Style.preview_paragraph}>A replica of the popular messaging platform now available!</p>
+          <button className="mt-3 bg-green-700 text-[#111B12] p-3">Get into the chats</button>
+          <p className={Style.security_msg}>Your personal messages are end-to-end encrypted</p>
+          </div>
+          }
       </div>
     </div>
   );
