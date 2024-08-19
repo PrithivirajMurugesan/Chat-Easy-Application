@@ -15,8 +15,6 @@ export const formatMessageDate = (date) => {
       return 'Invalid date'; // Handle invalid date
     }
 
-    console.log(messageDate, "Parsed message date");
-    console.log(date, "Original input date");
 
     if (isToday(messageDate)) {
       return 'Today';

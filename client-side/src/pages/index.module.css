@@ -42,7 +42,7 @@
   @apply size-8 cursor-pointer mt-[5px];
 }
 .main_div {
-  @apply absolute ml-[100%] top-[55px] w-[250px] bg-white shadow-lg rounded-[6px] transition-all duration-[1s];
+  @apply absolute ml-[100%] top-[55px] w-[250px] bg-white shadow-lg rounded-[6px] transition-all duration-[0.5s];
 }
 .show {
   @apply ml-[36%];
@@ -111,6 +111,9 @@
   @apply flex gap-3 items-center text-[#111B12] p-3 cursor-pointer;
 }
 .individual_chat:hover {
+  @apply bg-[#f0f2f5]
+}
+.active_chat {
   @apply bg-[#f0f2f5]
 }
 
@@ -285,7 +288,7 @@ scrollbar-width: none;  /* Firefox */
   @apply static mt-[50px];
 }
 .preview_paragraph {
-  @apply text-center text-[18px];
+  @apply text-center text-[17px];
 }
 }
 
