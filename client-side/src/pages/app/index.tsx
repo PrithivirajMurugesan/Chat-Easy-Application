@@ -7,11 +7,12 @@ import React, {
 } from "react";
 import { getLinkPreview } from "link-preview-js";
 import Style from "./index.module.css";
-import { formatMessageDate, formatTimestamp } from "../../utils/formateDate";
+import { formatMessageDate, formatTimestamp } from "../../../utils/formateDate";
 import Image from "next/image";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { useSocket } from "../../utils/socketContext";
+import { useSocket } from "../../../utils/socketContext";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 interface Message {
   content?: string;
@@ -61,26 +62,34 @@ const Home: React.FC = () => {
 
   const handleUserClick = (user : any) => {
     setSelectedUserId(user.id);
-    setSelectedUser(user);
-    // Load user-specific messages here if needed
+    setSelectedUser(user); // Load user-specific messages here if needed
+
+      // Get the div by ID and set display to none
+      const isMobile = window.innerWidth <= 480
+  const userDiv = document.getElementById("chatContainer");
+  const messageContainerDiv = document.getElementById("messageContainer");
+  if (userDiv && isMobile) {
+    userDiv.style.display = 'none';
+    if(messageContainerDiv)messageContainerDiv.style.display='block';
+  }
   };
   
 
   // Store the messages from the socket.io server starts
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("message", (data: Message) => {
-        console.log("Message received from server:", data);
-        const newMessage: Message = {
-          ...data,
-          type: data.userId === userId ? "sent" : "received",
-          timestamp: new Date().toISOString(),
-        };
-        setSentMessages((prevMessages) => [...prevMessages, newMessage]);
-      });
-    }
-  }, [socket]);
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("message", (data: Message) => {
+  //       console.log("Message received from server:", data);
+  //       const newMessage: Message = {
+  //         ...data,
+  //         type: data.userId === userId ? "sent" : "received",
+  //         timestamp: new Date().toISOString(),
+  //       };
+  //       setSentMessages((prevMessages) => [...prevMessages, newMessage]);
+  //     });
+  //   }
+  // }, [socket]);
 
   // Store the messages from the socket.io server ends
 
@@ -128,7 +137,6 @@ const Home: React.FC = () => {
       const hasImages = "images" in preview && Array.isArray(preview.images);
 
       const previewURL = preview.url;
-      console.log("Preview object:", preview, preview.url);
       return {
         url: previewURL || "",
         title: hasTitle ? preview.title : "",
@@ -145,9 +153,9 @@ const Home: React.FC = () => {
 
   // Shows the messages at last without mannual scrolling starts
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [sentMessages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [sentMessages]);
 
   // Shows the messages at last without mannual scrolling ends
 
@@ -289,20 +297,20 @@ const Home: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isDivVisible) {
-      // Add event listener to document
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      // Remove event listener from document
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
+  // useEffect(() => {
+  //   if (isDivVisible) {
+  //     // Add event listener to document
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //   } else {
+  //     // Remove event listener from document
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   }
 
-    // Cleanup the event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDivVisible]);
+  //   // Cleanup the event listener on component unmount
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [isDivVisible]);
 
   const handleOpenPopup = () => {
     setPopupOpen(true);
@@ -360,11 +368,112 @@ const Home: React.FC = () => {
 
   // Toogle the clicking more options on right ends
 
+  // Filtered the users lists
+
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [filteredUsers, setFilteredUsers] = useState(users);
+
+  // useEffect(() => {
+  //   // Filter users based on the search query
+  //   if (searchQuery) {
+  //     const filtered = users.filter(user =>
+  //       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       user.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+  //     );
+  //   console.log(filtered,"search++++++++++++");
+  //     // setFilteredUsers(filtered);
+  //   } 
+  //   // else {
+  //   //   // Show all users when search query is cleared
+  //   //   setFilteredUsers(users);
+  //   // }
+  // }, [searchQuery, users]);
+
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("message", (data: Message) => {
+        console.log("Message received from server:", data);
+        const newMessage: Message = {
+          ...data,
+          type: data.userId === userId ? "sent" : "received",
+          timestamp: new Date().toISOString(),
+        };
+        setSentMessages((prevMessages) => [...prevMessages, newMessage]);
+      });
+    }
+  
+    if (isDivVisible) {
+      // Add event listener to document when the div is visible
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      // Remove event listener from document when the div is not visible
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  
+    // Scroll to the latest message when sentMessages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  
+    // Cleanup function to remove event listeners and socket listeners
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (socket) {
+        socket.off("message");
+      }
+    };
+  }, [socket, isDivVisible, sentMessages]);
+
+  // Back to Home page starts and Close Chats
+  const router = useRouter();
+
+  const backToHomePage = () => {
+    const isMobile = window.innerWidth <= 480
+    const userDiv1 = document.getElementById("messageContainer");
+    const userDiv = document.getElementById("chatContainer");
+
+    if (userDiv1 && isMobile) {
+      userDiv1.style.display = 'none';
+      if(userDiv){
+        userDiv.style.display = 'block';
+      }
+    }
+  };
+
+  const mainBackToHomePage = () => {
+    router.push('/home'); // Navigate to the Home page
+  }
+
+  const backToChats = () => {
+    router.push('/home'); // Navigate to the Home page
+  };
+
+
+  // Back to Home page and Close Chats ends 
+
+  
+
   return (
     <div>
        <div className={Style.main_container}>
-        <div className={Style.chat_container}>
+        <div className={Style.chat_container} id="chatContainer">
           <div className={Style.profile_settings}>
+            <div className={Style.left_profile_settings}>
+          <div className={Style.main_back_arrow}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="#111B12"
+                      className="size-5"
+                      style={{ marginTop: "6px", marginLeft: "6px" }}
+                      onClick={mainBackToHomePage}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 32 32"
@@ -377,6 +486,7 @@ const Home: React.FC = () => {
                 clipRule="evenodd"
               />
             </svg>
+            </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 30 30"
@@ -527,7 +637,10 @@ const Home: React.FC = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              <input type="text" placeholder="Search" />
+              <input
+               type="text"
+                placeholder="Search"
+                />
             </div>
             <div className={Style.chat_variety}>
               <div className={Style.all}>All</div>
@@ -545,7 +658,8 @@ const Home: React.FC = () => {
                   key={user.id}
                   className={`${Style.individual_chat} ${
                     selectedUserId === user.id ? Style.active_chat : ""
-                  }`}
+                  }
+                  `}
                   onClick={() => handleUserClick(user)}
                 >
                   <div className={Style.chat_profile}>
@@ -580,8 +694,8 @@ const Home: React.FC = () => {
 
 
         </div>
-        {selectedUser ? (
-          <div className={Style.message_container}>
+        {selectedUser && (
+          <div className={Style.message_container} id="messageContainer">
             <div className={Style.profile_settings}>
               <div className={Style.profile_left}>
                 <div className={Style.message_profile}>
@@ -592,6 +706,7 @@ const Home: React.FC = () => {
                       fill="#111B12"
                       className="size-5"
                       style={{ marginTop: "6px", marginLeft: "6px" }}
+                      onClick={backToHomePage}
                     >
                       <path
                         fillRule="evenodd"
@@ -669,7 +784,7 @@ const Home: React.FC = () => {
                         Selected messages
                       </li>
 
-                      <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                      <li className="text-[#111B12] flex gap-3 cursor-pointer" onClick={backToChats}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                           <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
   <path fillRule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
@@ -712,6 +827,8 @@ const Home: React.FC = () => {
             
               </div>
             </div>
+            
+              <div className={Style.main_chat_section}>
             <div className={Style.chat_area}>
               <ul className={Style.list_group}>
                 {sentMessages.map((msg: any, index: any) => (
@@ -930,14 +1047,17 @@ const Home: React.FC = () => {
                 </button>
               </form>
             </div>
+            </div>
+           
           </div>
-        ) : <div className={Style.preview_section}>
+        ) }
+         {/* <div className={Style.preview_section}>
             <img src="watsap-preview.png" alt="pre-watsapp"></img>
           <p className={Style.preview_paragraph}>A replica of the popular messaging platform now available!</p>
           <button className="mt-3 bg-[#008069] text-[#fff] text-[15px] px-[24px] py-[10px] rounded-[24px]">Get into the chats</button>
           <p className={Style.security_msg}>Your personal messages are end-to-end encrypted</p>
-          </div>
-          }
+          </div> */}
+          
       </div>
     </div>
   );
