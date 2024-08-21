@@ -280,10 +280,10 @@ scrollbar-width: none;  /* Firefox */
 /* Side Bar starts */
 
 .side_bar {
-  @apply p-2 border-b-[#dadde3] border-b-[1px];
+  @apply p-2;
 }
 .side_bar_user_details {
-  @apply flex justify-between items-center;
+  @apply flex justify-between items-center border-b-[#dadde3] border-b-[1px] pb-[15px];
 }
 .side_bar_header {
   @apply p-1 flex gap-3;
@@ -310,6 +310,51 @@ scrollbar-width: none;  /* Firefox */
 .whatsapp_icon, .comments_icon {
   @apply w-[16px] h-[16px];
 }
+
+.side_bar_tags {
+  @apply mt-[24px] flex flex-col gap-3 p-2 border-b-[#dadde3] border-b-[1px] pb-[35px];
+}
+.tags_header {
+  @apply text-[#111B12] font-bold text-[16px];
+}
+.tags_selection {
+  @apply border-[#dadde3] border-solid border-[1px] p-2 rounded-md;
+}
+.tags_icon {
+  @apply flex items-center gap-2;
+}
+.tags_icon input {
+  @apply border-none outline-none w-full;
+}
+.side_bar_notes {
+  @apply mt-[24px] p-2;
+}
+.notes_header {
+  @apply text-[#111B12] font-bold text-[16px] flex justify-between;
+}
+.add_button_notes {
+  @apply bg-green-500 text-[#fff] pt-[6px] px-[5px] rounded-lg cursor-pointer;
+}
+.notes_paragraph {
+  @apply text-[#111B12] text-[13px] pt-2 font-medium;
+}
+.notes_textarea {
+  @apply pt-4 hidden;
+}
+.textarea_notes {
+  @apply w-full resize-none border-[#dadde3] border-solid border-[2px] outline-none p-3 rounded-md;
+  scrollbar-width: none;
+}
+.save_delete {
+  @apply  gap-3 justify-end items-center mt-3 hidden;
+}
+.save_btn {
+  @apply bg-blue-500 rounded-md py-2 px-3 text-[#fff];
+}
+.delete_btn {
+  @apply bg-green-500 rounded-md py-2 px-3 text-[#fff];
+}
+
 
 /* Side Bar starts */
 

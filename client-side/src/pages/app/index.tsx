@@ -14,7 +14,6 @@ import { useSocket } from "../../../utils/socketContext";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import { Splitter, SplitterPanel } from 'primereact/splitter';
-import { ExecFileSyncOptionsWithBufferEncoding } from "child_process";
 
 interface Message {
   content?: string;
@@ -42,9 +41,11 @@ interface User {
 const Home: React.FC = () => {
   const socket = useSocket(); // socket.io
   const [message, setMessage] = useState<string>(""); // messages
-  const [sentMessages, setSentMessages] = useState<Message[]>([]); // sending messages
+
+  const [sentMessages, setSentMessages] = useState<Record<string, Message[]>>({}); // sending messages
+
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false); // emoji showing
-  const userId = uuidv4(); // set uniquie userId
+  const userId = uuidv4()+''; // set uniquie userId
   const textareaRef = useRef<HTMLTextAreaElement>(null); // texarea refference
   const [isDivVisible, setIsDivVisible] = useState(false); // Left profile div visible
   const [isHovered, setIsHovered] = useState(false); // left profile settings icon hovered
@@ -100,7 +101,7 @@ const Home: React.FC = () => {
 
   const sendMessage = async (e: FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
-    if (socket && message.trim()) {
+    if (socket && message.trim() && selectedUser) {
       const messageData: Message = {
         userId,
         content: message,
@@ -120,7 +121,13 @@ const Home: React.FC = () => {
         };
         messageData.content = message.replace(urls[0], ""); // Remove URL from message content
       }
-      setSentMessages([...sentMessages, { ...messageData, type: "sent" }]);
+      // setSentMessages([...sentMessages, { ...messageData, type: "sent" }]);
+      // Update messages state with the new message for the selected user
+      setSentMessages((prevMessages) => ({
+        ...prevMessages,
+        [selectedUser.id]: [...(prevMessages[selectedUser.id] || []), messageData],
+      }));
+
       socket.emit("message", messageData);
       setMessage("");
     }
@@ -173,7 +180,13 @@ const Home: React.FC = () => {
       fileUrl: fileUrl,
       fileName: selectedFile.name,
     };
-    setSentMessages([...sentMessages, newMessage]);
+    // setSentMessages([...sentMessages, newMessage]);
+
+      // Update messages state with the new message for the selected user
+      setSentMessages((prevMessages) => ({
+        ...prevMessages,
+        [selectedUser?.id as any]: [...(prevMessages[selectedUser?.id as any] || []), newMessage],
+      }));
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -230,9 +243,13 @@ const Home: React.FC = () => {
   // Show the day of the messages starts
 
   const shouldShowDate = (messages: Message[], index: number) => {
-    if (index === 0) return true;
+    // Ensure the message at the given index and the previous index exist
+    if (!messages[index] || !messages[index - 1]) return true;
+  
     const currentDate = new Date(messages[index].timestamp).toDateString();
     const previousDate = new Date(messages[index - 1].timestamp).toDateString();
+  
+    // Return true if the dates are different, indicating that the date should be shown
     return currentDate !== previousDate;
   };
 
@@ -399,10 +416,21 @@ const Home: React.FC = () => {
         console.log("Message received from server:", data);
         const newMessage: Message = {
           ...data,
-          type: data.userId === userId ? "sent" : "received",
+          type: data?.userId === userId ? "sent" : "received",
           timestamp: new Date().toISOString(),
         };
-        setSentMessages((prevMessages) => [...prevMessages, newMessage]);
+        // setSentMessages((prevMessages) => [...prevMessages, newMessage]);
+
+         // Update messages state with the received message for the corresponding user
+         setSentMessages((prevMessages) => ({
+          ...prevMessages,
+          [data.userId as any]: [...(prevMessages[data.userId as any] || []), newMessage],
+        }
+
+      ));
+      console.log(newMessage);
+
+
       });
     }
   
@@ -424,7 +452,7 @@ const Home: React.FC = () => {
         socket.off("message");
       }
     };
-  }, [socket, isDivVisible, sentMessages]);
+  }, [socket, isDivVisible, selectedUser]);
 
   // Back to Home page starts and Close Chats
   const router = useRouter();
@@ -449,6 +477,50 @@ const Home: React.FC = () => {
   const backToChats = () => {
     router.push('/home'); // Navigate to the Home page
   };
+
+  // Side Bar Scripts Starts
+
+
+  const toogleNotesArea = () => {
+    const textArea = document.getElementById('notesTextarea');
+    const saveDeleteBtn = document.getElementById('saveDelete');
+    const deleteNotes = document.getElementById('deleteNotes');
+
+    if(textArea && saveDeleteBtn) {
+      textArea.style.display = 'block';
+      saveDeleteBtn.style.display = 'flex';
+    } 
+  }
+
+  const deleteNotesArea = () => {
+    const textArea = document.getElementById('notesTextarea');
+    const saveDeleteBtn = document.getElementById('saveDelete');
+    const deleteNotes = document.getElementById('deleteNotes');
+    
+    if(textArea && saveDeleteBtn && deleteNotes){
+      textArea.style.display = 'none';
+      saveDeleteBtn.style.display = 'none';
+    }
+  }
+
+  const [notesValue, setNotesValue] = useState<string | null>(null);
+
+  const getNotesValues = () => {
+    const textArea = document.getElementById('textareaNotes') as HTMLTextAreaElement;
+
+    if (textArea) {
+      setNotesValue(textArea.value); // Update state with the textarea value
+    }
+  };
+
+
+
+
+
+  // const
+
+  // Side Bar Scripts Ends
+
 
 
   // Back to Home page and Close Chats ends 
@@ -660,10 +732,10 @@ const Home: React.FC = () => {
                 <div
                   key={user.id}
                   className={`${Style.individual_chat} ${
-                    selectedUserId === user.id ? Style.active_chat : ""
+                    selectedUser?.id === user.id ? Style.active_chat : ""
                   }
                   `}
-                  onClick={() => handleUserClick(user)}
+                  onClick={() => setSelectedUser(user)}
                 >
                   <div className={Style.chat_profile}>
                     <svg
@@ -839,24 +911,24 @@ const Home: React.FC = () => {
               <div className={Style.main_chat_section}>
             <div className={Style.chat_area}>
               <ul className={Style.list_group}>
-                {sentMessages.map((msg: any, index: any) => (
+              {(sentMessages[selectedUser.id] || []).map((message, index) => (
                   <React.Fragment key={index}>
-                    {shouldShowDate(sentMessages, index) && (
+                    {shouldShowDate(sentMessages as any, index) && (
                       <div className={Style.date_divider}>
                         <span className={Style.message_date}>
-                          {formatMessageDate(msg.timestamp)}
+                          {formatMessageDate(message.timestamp)}
                         </span>
                       </div>
                     )}
 
                     <li
                       className={`${Style.messages} ${
-                        msg.type === "sent" ? Style.sent : Style.received
+                        message.type === "sent" ? Style.sent : Style.received
                       }`}
                     >
-                      {msg.preview ? (
+                      {message.preview ? (
                         <a
-                          href={msg.preview.url} // Assuming URL is in content
+                          href={message.preview.url} // Assuming URL is in content
                           target="_self"
                           rel="noopener noreferrer"
                           className={Style.file_link}
@@ -864,41 +936,41 @@ const Home: React.FC = () => {
                           <div className={Style.preview_container}>
                             <div>
                               <a
-                                href={msg.preview.url}
+                                href={message.preview.url}
                                 className={Style.previewURL}
                               >
-                                {msg.preview.url}
+                                {message.preview.url}
                               </a>
                             </div>
                             <img
-                              src={msg.preview.image}
+                              src={message.preview.image}
                               alt="preview"
                               className={Style.preview_image}
                             />
                             <div className={Style.preview_text}>
                               <h3 className={Style.preview_title}>
-                                {msg.preview.title}
+                                {message.preview.title}
                               </h3>
                               <p className={Style.preview_description}>
-                                {msg.preview.description}
+                                {message.preview.description}
                               </p>
                               <span className={Style.timestamp}>
-                                {formatTimestamp(msg.timestamp)}
+                                {formatTimestamp(message.timestamp)}
                               </span>
                             </div>
                           </div>
                         </a>
-                      ) : msg.fileUrl ? (
+                      ) : message.fileUrl ? (
                         <a
-                          href={msg.fileUrl}
+                          href={message.fileUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className={Style.file_link}
                         >
                           <img
                             src={
-                              isValidImageUrl(msg?.fileName || "")
-                                ? msg.fileUrl
+                              isValidImageUrl(message?.fileName || "")
+                                ? message.fileUrl
                                 : "google-docs.png"
                             }
                             alt="file preview"
@@ -911,17 +983,17 @@ const Home: React.FC = () => {
                               objectFit: "cover",
                             }}
                           />
-                          <span className="text-[12px]">{msg.fileName}</span>
+                          <span className="text-[12px]">{message.fileName}</span>
                           <span className={Style.timestamp}>
-                            {formatTimestamp(msg.timestamp)}
+                            {formatTimestamp(message.timestamp)}
                           </span>
                         </a>
                       ) : (
                         <div className={Style.message_content}>
                           <pre className="text-wrap">
-                            <span className={Style.content}>{msg.content}</span>
+                            <span className={Style.content}>{message.content}</span>
                             <span className={Style.timestamp}>
-                              {formatTimestamp(msg.timestamp)}
+                              {formatTimestamp(message.timestamp)}
                             </span>
                           </pre>
                         </div>
@@ -1083,6 +1155,52 @@ const Home: React.FC = () => {
                 
 
               </div>
+              </div>
+              <div className={Style.side_bar_tags}>
+                <div className={Style.tags_header}>
+                  <p>Tags</p>
+                </div>
+                <div className={Style.tags_selection}>
+                  <div className={Style.tags_icon}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d5ddeb" className="size-5">
+  <path fillRule="evenodd" d="M5.25 2.25a3 3 0 0 0-3 3v4.318a3 3 0 0 0 .879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 0 0 5.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 0 0-2.122-.879H5.25ZM6.375 7.5a1.125 1.125 0 1 0 0-2.25 1.125 1.125 0 0 0 0 2.25Z" clipRule="evenodd" />
+</svg>
+<input type="text" placeholder="Add a tag" />
+
+                  </div>
+                </div>
+
+              </div>
+              <div className={Style.side_bar_notes}>
+              <div className={Style.notes_header}>
+                  <p>Notes</p>
+                  <div className={Style.add_button_notes} id="addButtonNotes" onClick={toogleNotesArea}>
+                  <button>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="size-5">
+  <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+</svg>
+
+                  </button>
+                  </div>
+                </div>
+                <div className={Style.notes_paragraph}>
+                  <p>Notes help you to keep track of your conversation with your team</p>
+                </div>
+                {notesValue && (
+                <div className={Style.get_notes_value}>
+                  <p>Saved Notes :</p>
+                  <ol className={Style.saved_notes}>
+                  <li>{notesValue}</li>
+                  </ol>
+                </div>
+                )}
+                <div className={Style.notes_textarea} id="notesTextarea">
+                  <textarea className={Style.textarea_notes} id="textareaNotes"></textarea>
+                </div>
+                <div className={Style.save_delete} id="saveDelete">
+                  <button className={Style.save_btn} onClick={getNotesValues}>Save</button>
+                  <button className={Style.delete_btn} id="deleteNotes" onClick={deleteNotesArea}>Cancel</button>
+                </div>
               </div>
            </div>
             </SplitterPanel>
