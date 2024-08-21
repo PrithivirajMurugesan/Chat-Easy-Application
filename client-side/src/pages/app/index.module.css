@@ -129,7 +129,7 @@
 /* Main Chat Container Starts */
 
 .message_container {
-  @apply w-[73%] h-[calc(100vh-80px)] overflow-hidden;
+  @apply w-[100%] h-[calc(100vh-80px)] overflow-hidden;
   scrollbar-width: none;
 }
 .profile_settings {
@@ -155,6 +155,15 @@
 }
 .user_name {
   @apply text-[#111B12] text-[16px];
+}
+.users_name {
+  @apply text-[#111B12] text-[14px] font-bold;
+}
+.users_mail_id {
+  @apply text-[#111B12] text-[12px];
+}
+.user_msg {
+  @apply text-[#111B12] text-[14px];
 }
 .seen_details {
   @apply text-[#667781] text-[13px];
@@ -268,6 +277,43 @@ scrollbar-width: none;  /* Firefox */
 
 /* Main Container Ends */
 
+/* Side Bar starts */
+
+.side_bar {
+  @apply p-2 border-b-[#dadde3] border-b-[1px];
+}
+.side_bar_user_details {
+  @apply flex justify-between items-center;
+}
+.side_bar_header {
+  @apply p-1 flex gap-3;
+}
+.side_bar_profile {
+  @apply bg-green-200 p-2 rounded-[50%] cursor-pointer;
+}
+.user_side {
+  @apply flex flex-col;
+}
+.side_bar_user_name {
+  @apply text-[14px] font-bold;
+}
+.side_bar_user_status {
+  @apply text-[12px];
+}
+.side_bar_message_apps {
+  @apply flex gap-3 pr-1;
+}
+.whatsapp_div, .comments_div {
+  @apply shadow-md p-2 rounded-[8px] cursor-pointer;
+}
+
+.whatsapp_icon, .comments_icon {
+  @apply w-[16px] h-[16px];
+}
+
+/* Side Bar starts */
+
+
 
 /* Responsive Starts */
 @media only screen and (max-width: 480px) { 
@@ -291,6 +337,9 @@ scrollbar-width: none;  /* Firefox */
 }
 .popup_overlay {
   @apply w-full;
+}
+.individual_chat {
+  @apply justify-around;
 }
 .back_arrow {
   @apply block;

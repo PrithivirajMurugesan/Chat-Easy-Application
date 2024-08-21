@@ -13,6 +13,8 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { useSocket } from "../../../utils/socketContext";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
+import { Splitter, SplitterPanel } from 'primereact/splitter';
+import { ExecFileSyncOptionsWithBufferEncoding } from "child_process";
 
 interface Message {
   content?: string;
@@ -34,6 +36,7 @@ interface User {
   name: string;
   lastMessage: string;
   time: string;
+  mail_id: string;
 }
 
 const Home: React.FC = () => {
@@ -267,13 +270,13 @@ const Home: React.FC = () => {
 
   // Users Contact Array Starts
   const users = [
-    { id: 1, name: 'User One', lastMessage: 'last messages', time: '2.27 pm' },
-    { id: 2, name: 'User Two', lastMessage: 'last messages', time: '3.15 pm' },
-    { id: 3, name: 'User Three', lastMessage: 'last messages', time: '4.05 pm' },
-    { id: 4, name: 'User Four', lastMessage: 'last messages', time: '5.11 pm' },
-    { id: 5, name: 'User Five', lastMessage: 'last messages', time: '7.27 pm' },
-    { id: 6, name: 'User Six', lastMessage: 'last messages', time: '9.15 pm' },
-    { id: 7, name: 'User Seven', lastMessage: 'last messages', time: '12.01 pm' }, 
+    { id: 1, name: 'User One', lastMessage: 'last messages', time: '2.27 pm', mail_id: 'one@gmail.com' },
+    { id: 2, name: 'User Two', lastMessage: 'last messages', time: '3.15 pm', mail_id: 'two@gmail.com' },
+    { id: 3, name: 'User Three', lastMessage: 'last messages', time: '4.05 pm', mail_id: 'three@gmail.com' },
+    { id: 4, name: 'User Four', lastMessage: 'last messages', time: '5.11 pm', mail_id: 'four@gmail.com' },
+    { id: 5, name: 'User Five', lastMessage: 'last messages', time: '7.27 pm', mail_id: 'five@gmail.com' },
+    { id: 6, name: 'User Six', lastMessage: 'last messages', time: '9.15 pm', mail_id: 'six@gmail.com' },
+    { id: 7, name: 'User Seven', lastMessage: 'last messages', time: '12.01 pm', mail_id: 'seven@gmail.com' }, 
     // Add more users as needed
   ];
 
@@ -680,6 +683,9 @@ const Home: React.FC = () => {
                     <div className={Style.users_name}>
                       <p>{user.name}</p>
                     </div>
+                    <div className={Style.users_mail_id}>
+                      <p>{user.mail_id}</p>
+                    </div>
                     <div className={Style.user_msg}>
                       <p>{user.lastMessage}</p>
                     </div>
@@ -695,6 +701,8 @@ const Home: React.FC = () => {
 
         </div>
         {selectedUser && (
+          <Splitter style={{ width: 'calc(100% - 27%)' }}>
+            <SplitterPanel className="flex align-items-center justify-content-center" size={70} minSize={40}>
           <div className={Style.message_container} id="messageContainer">
             <div className={Style.profile_settings}>
               <div className={Style.profile_left}>
@@ -1050,13 +1058,36 @@ const Home: React.FC = () => {
             </div>
            
           </div>
+          </SplitterPanel>
+          <SplitterPanel className=" bg-white text-[#111B12]" size={30} minSize={25}>
+           <div className={Style.side_bar}>
+            <div className={Style.side_bar_user_details}>
+              <div className={Style.side_bar_header}>
+                <div className={Style.side_bar_profile}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-7">
+  <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+</svg>
+                </div>
+                <div className={Style.user_side}>
+                <div className={Style.side_bar_user_name}>
+                  <p>{selectedUser.name}</p>
+                </div>
+                <div className={Style.side_bar_user_status}>
+                  <p>Available</p>
+                </div>
+                </div>
+              </div>
+              <div className={Style.side_bar_message_apps}>
+                <div className={Style.whatsapp_div}><img className={Style.whatsapp_icon} src="whatsapp.png" alt="whatsapp_image" /></div>
+                <div className={Style.comments_div}><img className={Style.comments_icon} src="comments.png" alt="whatsapp_image" /></div>
+                
+
+              </div>
+              </div>
+           </div>
+            </SplitterPanel>
+          </Splitter>
         ) }
-         {/* <div className={Style.preview_section}>
-            <img src="watsap-preview.png" alt="pre-watsapp"></img>
-          <p className={Style.preview_paragraph}>A replica of the popular messaging platform now available!</p>
-          <button className="mt-3 bg-[#008069] text-[#fff] text-[15px] px-[24px] py-[10px] rounded-[24px]">Get into the chats</button>
-          <p className={Style.security_msg}>Your personal messages are end-to-end encrypted</p>
-          </div> */}
           
       </div>
     </div>
