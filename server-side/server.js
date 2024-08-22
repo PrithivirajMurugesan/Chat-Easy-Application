@@ -27,15 +27,15 @@ io.on('connection', (socket) => {
       // Automated replies
       let reply;
       if (userMessage === 'how are you?') {
-        reply = { userId: 'bot', content: 'Fine, how about you?', timestamp: new Date().toISOString(), type: 'received' };
+        reply = { userId: data.userId, content: 'Fine, how about you?', timestamp: new Date().toISOString(), type: 'received' };
       } else if (userMessage === 'hii') {
-        reply = { userId: 'bot', content: 'Hello', timestamp: new Date().toISOString(), type: 'received' };
+        reply = { userId: data.userId, content: 'Hello', timestamp: new Date().toISOString(), type: 'received' };
       } else if (userMessage === 'what about the invoice?') {
-        reply = { userId: 'bot', content: 'Sure, I will send it soon!', timestamp: new Date().toISOString(), type: 'received' };
+        reply = { userId: data.userId, content: 'Sure, I will send it soon!', timestamp: new Date().toISOString(), type: 'received' };
       }
       else {
         // Default response for unrecognized messages
-        reply = { userId: 'bot', content: "Sorry, I can't understand what you asked.", timestamp: new Date().toISOString(), type: 'received' };
+        reply = { userId: data.userId, content: "Sorry, I can't understand what you asked.", timestamp: new Date().toISOString(), type: 'received' };
       }
 
       if (reply) {

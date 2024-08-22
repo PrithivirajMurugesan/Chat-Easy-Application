@@ -331,10 +331,21 @@ scrollbar-width: none;  /* Firefox */
   @apply mt-[24px] p-2;
 }
 .notes_header {
-  @apply text-[#111B12] font-bold text-[16px] flex justify-between;
+  @apply text-[#111B12] font-bold text-[16px] flex justify-between relative;
 }
 .add_button_notes {
   @apply bg-green-500 text-[#fff] pt-[6px] px-[5px] rounded-lg cursor-pointer;
+}
+.add_button_notes[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  right: 40px;
+  color: black;
+  font-size: 12px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 3px;
+  border-radius: 5px;
 }
 .notes_paragraph {
   @apply text-[#111B12] text-[13px] pt-2 font-medium;
@@ -367,6 +378,15 @@ scrollbar-width: none;  /* Firefox */
 }
 .notes_list {
   @apply pl-[8px] pt-2 pb-[6px] flex items-end justify-between gap-[8px];
+}
+.edit_delete {
+  @apply flex gap-3;
+}
+.edit_list {
+  @apply bg-[#e8e8e8] rounded-[50px] p-1 cursor-pointer;
+}
+.edit_list:hover {
+  @apply bg-blue-500;
 }
 .delete_list {
   @apply bg-[#e8e8e8] rounded-[50px] p-1 cursor-pointer;

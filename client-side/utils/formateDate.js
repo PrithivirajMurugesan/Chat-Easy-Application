@@ -9,6 +9,8 @@ export const formatMessageDate = (date) => {
   try {
     // Normalize the date format to ISO 8601 if possible
     const messageDate = typeof date === 'string' ? parseISO(date) : new Date(date);
+// const messageDate = new Date ("Fri Aug 23 2024 17:26:22 GMT+0530"); // check the today, yesterday and the day
+    console.log(messageDate, "messageDate++++++++++++");
     // const messageDate = new Date('2024-08-09T09:09:59.783Z');
     if (isNaN(messageDate.getTime())) {
       console.error('Invalid date:', date);
@@ -22,6 +24,7 @@ export const formatMessageDate = (date) => {
       return 'Yesterday';
     } else {
       return format(messageDate, 'EEEE'); // Format as day of the week (e.g., 'Wednesday')
+      // if want to display the day like this -- wednesday august date -- use this -- 'EEEE, MMMM d'.
     }
   } catch (error) {
     console.error('Error processing date:', error);
