@@ -433,6 +433,10 @@ const Home: React.FC = () => {
 
       });
     }
+
+    if (selectedUser) {
+      textareaRef.current?.focus(); // Focus the textarea when a user is selected
+    }
   
     if (isDivVisible) {
       // Add event listener to document when the div is visible
@@ -484,7 +488,6 @@ const Home: React.FC = () => {
   const toogleNotesArea = () => {
     const textArea = document.getElementById('notesTextarea');
     const saveDeleteBtn = document.getElementById('saveDelete');
-    const deleteNotes = document.getElementById('deleteNotes');
 
     if(textArea && saveDeleteBtn) {
       textArea.style.display = 'block';
@@ -493,7 +496,9 @@ const Home: React.FC = () => {
   }
 
   const deleteNotesArea = () => {
-    const textArea = document.getElementById('notesTextarea');
+    const textArea = document.getElementById('notesTextarea') as HTMLTextAreaElement;
+    const textAreaValue = document.getElementById('textareaNotes') as HTMLTextAreaElement;
+
     const saveDeleteBtn = document.getElementById('saveDelete');
     const deleteNotes = document.getElementById('deleteNotes');
     
@@ -501,16 +506,41 @@ const Home: React.FC = () => {
       textArea.style.display = 'none';
       saveDeleteBtn.style.display = 'none';
     }
+    textAreaValue.value = "";
+    setHasInput(false); // Reset the shadow state
   }
 
-  const [notesValue, setNotesValue] = useState<string | null>(null);
+  const [notesValue, setNotesValue] = useState<string[]>([]);
+  const [hasInput, setHasInput] = useState<boolean>(false); // State to track if textarea has input
 
   const getNotesValues = () => {
     const textArea = document.getElementById('textareaNotes') as HTMLTextAreaElement;
 
-    if (textArea) {
-      setNotesValue(textArea.value); // Update state with the textarea value
+    if (textArea && textArea.value.trim() !== "") {
+      const newNote = textArea.value.trim();
+
+      // Add the new note to the notesArray
+      setNotesValue(prevNotes => {
+        const updatedNotes = [...prevNotes, newNote];
+        return updatedNotes;
+      });
+
+    textArea.value = "";
+    setHasInput(false); // Reset the shadow state
     }
+
+  };
+
+    // Function to handle textarea input
+    const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = event.target.value.trim();
+      setHasInput(value.length > 0); // Add shadow if there's input
+    };
+
+   // Function to handle deleting a specific note
+   const deleteNote = (index: number) => {
+    // Filter out the note at the specified index
+    setNotesValue(prevNotes => prevNotes.filter((_, i) => i !== index));
   };
 
 
@@ -1131,7 +1161,7 @@ const Home: React.FC = () => {
            
           </div>
           </SplitterPanel>
-          <SplitterPanel className=" bg-white text-[#111B12]" size={30} minSize={25}>
+          <SplitterPanel className=" bg-white text-[#111B12]" size={30} minSize={28}>
            <div className={Style.side_bar}>
             <div className={Style.side_bar_user_details}>
               <div className={Style.side_bar_header}>
@@ -1174,7 +1204,7 @@ const Home: React.FC = () => {
               <div className={Style.side_bar_notes}>
               <div className={Style.notes_header}>
                   <p>Notes</p>
-                  <div className={Style.add_button_notes} id="addButtonNotes" onClick={toogleNotesArea}>
+                  <div className={Style.add_button_notes} id="addButtonNotes" onClick={toogleNotesArea} title="Add Notes by clicking">
                   <button>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="size-5">
   <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
@@ -1186,20 +1216,39 @@ const Home: React.FC = () => {
                 <div className={Style.notes_paragraph}>
                   <p>Notes help you to keep track of your conversation with your team</p>
                 </div>
-                {notesValue && (
+                {notesValue.length > 0 && (
                 <div className={Style.get_notes_value}>
-                  <p>Saved Notes :</p>
+                  <p className="font-bold">Saved Notes :</p>
                   <ol className={Style.saved_notes}>
-                  <li>{notesValue}</li>
+                    {notesValue.map((note, index) => (
+                  <li key={index} className={Style.notes_list} style={{listStyle : "auto"}}>
+                  {index+1} . {note}
+                    <div className={Style.delete_list} onClick={() => deleteNote(index)} title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" fill="currentColor" className="size-4 pl-[2px]">
+  <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clipRule="evenodd" />
+</svg>
+</div>
+                  </li> // Display each note as a list item
+                    ))}
                   </ol>
                 </div>
                 )}
                 <div className={Style.notes_textarea} id="notesTextarea">
-                  <textarea className={Style.textarea_notes} id="textareaNotes"></textarea>
+                  <textarea className={`${Style.textarea_notes} ${hasInput ? Style.textarea_shadow : ''}`} id="textareaNotes" placeholder="Enter note here" onChange={handleInputChange}></textarea>
                 </div>
                 <div className={Style.save_delete} id="saveDelete">
-                  <button className={Style.save_btn} onClick={getNotesValues}>Save</button>
-                  <button className={Style.delete_btn} id="deleteNotes" onClick={deleteNotesArea}>Cancel</button>
+                  <button className={Style.save_btn} onClick={getNotesValues} title="Save">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="size-6">
+  <path fillRule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" />
+</svg>
+
+                  </button>
+                  <button className={Style.delete_btn} id="deleteNotes" onClick={deleteNotesArea} title="Close">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="size-6">
+  <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+</svg>
+
+                  </button>
                 </div>
               </div>
            </div>

@@ -280,7 +280,8 @@ scrollbar-width: none;  /* Firefox */
 /* Side Bar starts */
 
 .side_bar {
-  @apply p-2;
+  @apply p-2 overflow-auto h-[calc(100vh-78px)];
+  scrollbar-width: none;
 }
 .side_bar_user_details {
   @apply flex justify-between items-center border-b-[#dadde3] border-b-[1px] pb-[15px];
@@ -342,19 +343,37 @@ scrollbar-width: none;  /* Firefox */
   @apply pt-4 hidden;
 }
 .textarea_notes {
-  @apply w-full resize-none border-[#dadde3] border-solid border-[2px] outline-none p-3 rounded-md;
+  @apply w-full resize-none border-[#dadde3] border-solid border-[3px] outline-none p-3 rounded-md;
   scrollbar-width: none;
+  transition: box-shadow 0.3s ease;
+}
+.textarea_shadow {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; /* Customize the shadow as needed */
 }
 .save_delete {
   @apply  gap-3 justify-end items-center mt-3 hidden;
 }
 .save_btn {
-  @apply bg-blue-500 rounded-md py-2 px-3 text-[#fff];
+  @apply bg-green-500 rounded-lg py-2 px-3 text-[#fff];
 }
 .delete_btn {
-  @apply bg-green-500 rounded-md py-2 px-3 text-[#fff];
+  @apply bg-red-500 rounded-lg py-2 px-3 text-[#fff];
 }
-
+.saved_notes {
+  @apply mt-[6px] divide-y divide-gray-400;
+}
+.get_notes_value {
+  @apply border-[#e8e8e8] border-solid border-[1px] p-[6px] rounded-lg mt-[12px] bg-[#BBF7D0];
+}
+.notes_list {
+  @apply pl-[8px] pt-2 pb-[6px] flex items-end justify-between gap-[8px];
+}
+.delete_list {
+  @apply bg-[#e8e8e8] rounded-[50px] p-1 cursor-pointer;
+}
+.delete_list:hover {
+  @apply bg-red-500;
+}
 
 /* Side Bar starts */
 
