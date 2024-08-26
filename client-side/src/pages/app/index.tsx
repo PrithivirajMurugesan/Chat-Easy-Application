@@ -48,7 +48,8 @@ const Home: React.FC = () => {
 
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false); // emoji showing
   const userId = uuidv4() + ""; // set uniquie userId
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // texarea refference
+  const textareaRef = useRef<HTMLTextAreaElement>(null); // Notes texarea refference
+  const mainTextAreaRef = useRef<HTMLTextAreaElement>(null); // main text area refference
   const [isDivVisible, setIsDivVisible] = useState(false); // Left profile div visible
   const [isHovered, setIsHovered] = useState(false); // left profile settings icon hovered
   const mainDivRef = useRef<HTMLDivElement>(null); // left profile settings main div showing
@@ -65,6 +66,7 @@ const Home: React.FC = () => {
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  
 
   const handleUserClick = (user: any) => {
     setSelectedUserId(user.id);
@@ -178,6 +180,9 @@ const Home: React.FC = () => {
       sendFileMessage(selectedFile); // Send the file message when a file is selected
       e.target.value = ""; // Reset file input to allow re-selection of the same file
     }
+    if (mainTextAreaRef.current) {
+      mainTextAreaRef.current.focus();
+    }
   };
 
   const triggerFileInput = () => {
@@ -216,25 +221,14 @@ const Home: React.FC = () => {
     const newMessage = message.slice(0, lastIndex) + suggestion;
     setMessage(newMessage);
     setShowSuggestions(false);
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+    if (mainTextAreaRef.current) {
+      mainTextAreaRef.current.focus();
     }
   };
 
   // Sets the suggestion for typing symbols ends
 
   // Show the day of the messages starts
-
-  // const shouldShowDate = (messages: Message[], index: number) => {
-  //   // Ensure the message at the given index and the previous index exist
-  //   if (!messages[index] || !messages[index - 1]) return true;
-
-  //   const currentDate = new Date(messages[index].timestamp).toDateString();
-  //   const previousDate = new Date(messages[index - 1].timestamp).toDateString();
-
-  //   // Return true if the dates are different, indicating that the date should be shown
-  //   return currentDate !== previousDate;
-  // };
 
   const shouldShowDate = (messages: Message[], index: number) => {
     if (!messages[index]) return false;
@@ -274,8 +268,8 @@ const Home: React.FC = () => {
       setShowEmojiPicker(false);
 
       // Ensure the textarea is focused
-      if (textareaRef.current) {
-        textareaRef.current.focus();
+      if (mainTextAreaRef.current) {
+        mainTextAreaRef.current.focus();
       }
     }
   };
@@ -464,7 +458,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (selectedUser) {
-      textareaRef.current?.focus(); // Focus the textarea when a user is selected
+      mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
     }
   }, [selectedUser]);
 
@@ -515,11 +509,11 @@ const Home: React.FC = () => {
   const toogleNotesArea = () => {
     const textArea = document.getElementById("notesTextarea");
     const saveDeleteBtn = document.getElementById("saveDelete");
-
     if (textArea && saveDeleteBtn) {
       textArea.style.display = "block";
       saveDeleteBtn.style.display = "flex";
     }
+    textareaRef.current?.focus();
   };
 
   const deleteNotesArea = () => {
@@ -553,13 +547,20 @@ const Home: React.FC = () => {
       // Edit mode: update the existing note
       setNotesValue((prevNotes) =>
         prevNotes.map((note, index) =>
-          index === editIndex ? noteValue : note
+        {
+          if(index === editIndex){
+return noteValue === "" ? note : noteValue;
+          }
+          return note;
+        }
         )
       );
       setEditIndex(null); // Exit edit mode
     } else {
+      if(noteValue !==""){
       // Add a new note
       setNotesValue((prevNotes) => [...prevNotes, noteValue]);
+    }
     }
     const textAreaValue = document.getElementById(
       "textareaNotes"
@@ -570,13 +571,14 @@ const Home: React.FC = () => {
       setHasInput(false); // Reset the shadow state
     }
 
+    textareaRef.current?.focus();
     setNoteValue(""); // Clear the textarea
     setHasInput(false); // Reset the shadow state
   };
 
   // Function to handle textarea input
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
     setNoteValue(value); // Update the note value in the state
     setHasInput(value.length > 0); // Add shadow if there's input
   };
@@ -823,7 +825,7 @@ const Home: React.FC = () => {
                     selectedUser?.id === user.id ? Style.active_chat : ""
                   }
                   `}
-                  onClick={() => setSelectedUser(user)}
+                  onClick={() => handleUserClick(user)}
                 >
                   <div className={Style.chat_profile}>
                     <svg
@@ -1228,7 +1230,7 @@ const Home: React.FC = () => {
 
                       <textarea
                         value={message}
-                        ref={textareaRef}
+                        ref={mainTextAreaRef}
                         onChange={handleMessageChange}
                         placeholder="Type your message"
                         style={{
@@ -1303,6 +1305,7 @@ const Home: React.FC = () => {
               size={30}
               minSize={28}
             >
+              {selectedUser && (
               <div className={Style.side_bar}>
                 <div className={Style.side_bar_user_details}>
                   <div className={Style.side_bar_header}>
@@ -1375,7 +1378,7 @@ const Home: React.FC = () => {
                       className={Style.add_button_notes}
                       id="addButtonNotes"
                       onClick={toogleNotesArea}
-                      title="Add Notes by clicking"
+                      title="Add Notes here"
                     >
                       <button>
                         <svg
@@ -1499,6 +1502,7 @@ const Home: React.FC = () => {
                   </div>
                 </div>
               </div>
+              )}
             </SplitterPanel>
           </Splitter>
         )}

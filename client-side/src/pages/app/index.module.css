@@ -341,7 +341,7 @@ scrollbar-width: none;  /* Firefox */
   position: absolute;
   right: 40px;
   color: black;
-  font-size: 12px;
+  font-size: 10px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 3px;
