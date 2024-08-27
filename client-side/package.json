@@ -13,6 +13,8 @@
     "emoji-picker-react": "^4.11.1",
     "link-preview-js": "^3.0.5",
     "next": "14.2.5",
+    "primeflex": "^3.3.1",
+    "primeicons": "^7.0.0",
     "primereact": "^10.8.2",
     "react": "^18",
     "react-dom": "^18",

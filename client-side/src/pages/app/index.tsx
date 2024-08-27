@@ -14,6 +14,9 @@ import { useSocket } from "../../../utils/socketContext";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import { Splitter, SplitterPanel } from "primereact/splitter";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
 
 interface Message {
   content?: string;
@@ -76,13 +79,12 @@ const Home: React.FC = () => {
 
     handleResize(); // Set initial value
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
   const handleUserClick = (user: any) => {
     setSelectedUserId(user.id);
@@ -96,10 +98,10 @@ const Home: React.FC = () => {
 
     if (userDiv && isMobile) {
       userDiv.style.display = "none";
-      if (messageContainerDiv){ 
+      if (messageContainerDiv) {
         messageContainerDiv.style.display = "block";
       }
-      if(notesSection){
+      if (notesSection) {
         notesSection.style.display = "none";
       }
     }
@@ -255,17 +257,16 @@ const Home: React.FC = () => {
 
   const shouldShowDate = (messages: Message[], index: number) => {
     if (!messages[index]) return false;
-  
+
     // If it's the first message, show the date
     if (index === 0) return true;
-  
+
     const currentDate = new Date(messages[index].timestamp).toDateString();
     const previousDate = new Date(messages[index - 1].timestamp).toDateString();
-  
+
     // Show the date if the current message's date is different from the previous message's date
     return currentDate !== previousDate;
   };
-  
 
   // Show the day of the messages ends
 
@@ -483,8 +484,10 @@ const Home: React.FC = () => {
     if (selectedUser) {
       mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
     }
-    if (selectedUser && isMobile){
-    const backToChatsSection = document.querySelector(".p-splitter-horizontal");
+    if (selectedUser && isMobile) {
+      const backToChatsSection = document.querySelector(
+        ".p-splitter-horizontal"
+      );
       (backToChatsSection as HTMLElement).style.display = "flex";
       mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
     }
@@ -517,7 +520,7 @@ const Home: React.FC = () => {
     const userDiv = document.getElementById("chatContainer");
     const backToChatsSection = document.querySelector(".p-splitter-horizontal");
 
-    if(isMobile && backToChatsSection ) {
+    if (isMobile && backToChatsSection) {
       (backToChatsSection as HTMLElement).style.display = "none";
     }
 
@@ -533,7 +536,16 @@ const Home: React.FC = () => {
     router.push("/home"); // Navigate to the Home page
   };
 
+  const logOutToHome = () => {
+    router.push("/home"); // Navigate to the Home page
+  };
+
   const backToChats = () => {
+    // setSelectedUser(null);
+    // setMessage('');
+    // setRightPopupOpen(false);
+    // setIsDivSettings(false);
+    // setIsRightHovered(false);
     router.push("/home"); // Navigate to the Home page
   };
 
@@ -569,37 +581,45 @@ const Home: React.FC = () => {
     setHasInput(false); // Reset the shadow state
   };
 
-  const [notesValue, setNotesValue] = useState<string[]>([]);
+  const [notesValue, setNotesValue] = useState<
+    { note: string; userId: string; id: string }[]
+  >([]);
   const [hasInput, setHasInput] = useState<boolean>(false); // State to track if textarea has input
   const [editIndex, setEditIndex] = useState<number | null>(null); // Track which note is being edited
   const [noteValue, setNoteValue] = useState<string>(""); // Current value of the note being added or edited
 
   const getNotesValues = () => {
-    
     if (editIndex !== null) {
       // Edit mode: update the existing note
       setNotesValue((prevNotes) =>
-        prevNotes.map((note, index) =>
-        {
-          if(index === editIndex){
-return noteValue === "" ? note : noteValue;
+        prevNotes.map((note, index) => {
+          if (index === editIndex) {
+            return noteValue === ""
+              ? note
+              : {
+                  note: noteValue,
+                  userId: selectedUser?.id + "",
+                  id: uuidv4(),
+                };
           }
           return note;
-        }
-        )
+        })
       );
       setEditIndex(null); // Exit edit mode
     } else {
-      if(noteValue !==""){
-      // Add a new note
-      setNotesValue((prevNotes) => [...prevNotes, noteValue]);
-    }
+      if (noteValue !== "") {
+        // Add a new note
+        setNotesValue((prevNotes) => [
+          ...prevNotes,
+          { note: noteValue, userId: selectedUser?.id + "", id: uuidv4() },
+        ]);
+      }
     }
     const textAreaValue = document.getElementById(
       "textareaNotes"
     ) as HTMLTextAreaElement;
     const getTextAreaValue = textAreaValue.value;
-    if(getTextAreaValue === "") {
+    if (getTextAreaValue === "") {
       setNotesValue([]); // Clear the textarea
       setHasInput(false); // Reset the shadow state
     }
@@ -617,13 +637,13 @@ return noteValue === "" ? note : noteValue;
   };
 
   // Function to handle deleting a specific note
-  const deleteNote = (index: number) => {
+  const deleteNote = (id: string) => {
     // Filter out the note at the specified index
-    setNotesValue((prevNotes) => prevNotes.filter((_, i) => i !== index));
+    setNotesValue((prevNotes) => prevNotes.filter((data) => data.id !== id));
   };
 
   // Function to handle editing a specific note
-  const editNote = (index: number) => {
+  const editNote = (note: any) => {
     const textArea = document.getElementById(
       "notesTextarea"
     ) as HTMLTextAreaElement;
@@ -639,9 +659,38 @@ return noteValue === "" ? note : noteValue;
       saveDeleteBtn.style.display = "flex";
     }
     textareaRef.current?.focus();
-    setNoteValue(notesValue[index]); // Populate the textarea with the note's current value
+    const index = notesValue.findIndex((v) => v?.id == note?.id);
+    setNoteValue(notesValue[index].note); // Populate the textarea with the note's current value
     setEditIndex(index); // Set the edit index to track which note is being edited
     setHasInput(true); // Apply shadow since textarea will have content
+  };
+
+  const toogleNotesSection = () => {
+    const notesForMobile = document.getElementById("notesSection");
+    const mobileMessageContainer = document.getElementById(
+      "mobileMessageContainer"
+    );
+    const sideBar = document.getElementById("mobileSideBar");
+    if (isMobile && notesForMobile && mobileMessageContainer && sideBar) {
+      console.log("clickkkkkkkkkkkk");
+      notesForMobile.style.display = "block";
+      mobileMessageContainer.style.display = "none";
+      notesForMobile.style.height = "calc(100vh - 0px)";
+      sideBar.style.height = "calc(100vh - 0px)";
+    }
+  };
+
+  const closeNotesSection = () => {
+    const notesForMobile = document.getElementById("notesSection");
+    const mobileMessageContainer = document.getElementById(
+      "mobileMessageContainer"
+    );
+    const sideBar = document.getElementById("mobileSideBar");
+    if (isMobile && notesForMobile && mobileMessageContainer && sideBar) {
+      console.log("closedddddddd");
+      notesForMobile.style.display = "none";
+      mobileMessageContainer.style.display = "block";
+    }
   };
 
   // Side Bar Scripts Ends
@@ -805,7 +854,10 @@ return noteValue === "" ? note : noteValue;
                     Select chats
                   </li>
 
-                  <li className="text-[#111B12] flex gap-3 cursor-pointer">
+                  <li
+                    className="text-[#111B12] flex gap-3 cursor-pointer"
+                    onClick={logOutToHome}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -825,21 +877,12 @@ return noteValue === "" ? note : noteValue;
             </div>
           </div>
           <div className={Style.search_filter}>
-            <div className={Style.search}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="#111B12"
-                className="size-4"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <input type="text" placeholder="Search" />
-            </div>
+            <IconField iconPosition="left">
+              <div className={`${Style.search}`}>
+                <InputIcon className="pi pi-search text-[#111B12]"> </InputIcon>
+                <InputText v-model="value1" placeholder="Search" />
+              </div>
+            </IconField>
             <div className={Style.chat_variety}>
               <div className={Style.all}>All</div>
               <div className={Style.unread}>Unread</div>
@@ -896,9 +939,12 @@ return noteValue === "" ? note : noteValue;
         {selectedUser && (
           <Splitter style={{ width: "calc(100% - 27%)" }}>
             <SplitterPanel
-              className={`${Style.message_section} ${isMobile ? Style.mobile_message_container : ""}`}
+              className={`${Style.message_section} ${
+                isMobile ? Style.mobile_message_container : ""
+              }`}
               size={70}
               minSize={40}
+              id={`${isMobile ? "mobileMessageContainer" : "desktopMessage"}`}
             >
               <div className={Style.message_container} id="messageContainer">
                 <div className={Style.profile_settings}>
@@ -979,21 +1025,28 @@ return noteValue === "" ? note : noteValue;
                     >
                       <div className={Style.rightInner_div}>
                         <ul className="flex flex-col mt-1 mb-1">
-                          <li className="text-[#111B12] flex gap-3 cursor-pointer">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="size-6"
+                          {isMobile ? (
+                            <li
+                              className="text-[#111B12] flex gap-3 cursor-pointer"
+                              onClick={toogleNotesSection}
                             >
-                              <path
-                                fillRule="evenodd"
-                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            Group info
-                          </li>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="size-6"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              Add Notes
+                            </li>
+                          ) : (
+                            ""
+                          )}
 
                           <li className="text-[#111B12] flex gap-3 cursor-pointer">
                             <svg
@@ -1107,7 +1160,10 @@ return noteValue === "" ? note : noteValue;
                       {(sentMessages[selectedUser.id] || []).map(
                         (message, index) => (
                           <React.Fragment key={index}>
-                            {shouldShowDate(sentMessages[selectedUser.id] as any, index) && (
+                            {shouldShowDate(
+                              sentMessages[selectedUser.id] as any,
+                              index
+                            ) && (
                               <div className={Style.date_divider}>
                                 <span className={Style.message_date}>
                                   {formatMessageDate(message.timestamp)}
@@ -1330,212 +1386,252 @@ return noteValue === "" ? note : noteValue;
                       </button>
                     </form>
                   </div>
-                  </div>
                 </div>
+              </div>
             </SplitterPanel>
             <SplitterPanel
-              className={`${Style.notes_section} ${isMobile ? Style.hide_notes : "block"}`}
+              className={`${Style.notes_section} ${
+                isMobile ? Style.hide_notes : "block"
+              }`}
               id="notesSection"
               size={30}
               minSize={28}
             >
               {selectedUser && (
-              <div className={Style.side_bar}>
-                <div className={Style.side_bar_user_details}>
-                  <div className={Style.side_bar_header}>
-                    <div className={Style.side_bar_profile}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="size-7"
+                <div
+                  className={Style.side_bar}
+                  id={`${isMobile ? "mobileSideBar" : "deskSideBar"}`}
+                >
+                  <div className={Style.side_bar_user_details}>
+                    <div className={Style.side_bar_header}>
+                      <div
+                        className={Style.notes_back_arrow}
+                        id={`${
+                          isMobile
+                            ? "mobileBackToChatArea"
+                            : "deskBackToChatArea"
+                        }`}
+                        onClick={closeNotesSection}
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className={Style.user_side}>
-                      <div className={Style.side_bar_user_name}>
-                        <p>{selectedUser.name}</p>
-                      </div>
-                      <div className={Style.side_bar_user_status}>
-                        <p>Available</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={Style.side_bar_message_apps}>
-                    <div className={Style.whatsapp_div}>
-                      <img
-                        className={Style.whatsapp_icon}
-                        src="whatsapp.png"
-                        alt="whatsapp_image"
-                      />
-                    </div>
-                    <div className={Style.comments_div}>
-                      <img
-                        className={Style.comments_icon}
-                        src="comments.png"
-                        alt="whatsapp_image"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={Style.side_bar_tags}>
-                  <div className={Style.tags_header}>
-                    <p>Tags</p>
-                  </div>
-                  <div className={Style.tags_selection}>
-                    <div className={Style.tags_icon}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="#d5ddeb"
-                        className="size-5"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.25 2.25a3 3 0 0 0-3 3v4.318a3 3 0 0 0 .879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 0 0 5.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 0 0-2.122-.879H5.25ZM6.375 7.5a1.125 1.125 0 1 0 0-2.25 1.125 1.125 0 0 0 0 2.25Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <input type="text" placeholder="Add a tag" />
-                  </div>
-          </div>
-                </div>
-                <div className={Style.side_bar_notes}>
-                  <div className={Style.notes_header}>
-                    <p>Notes</p>
-                    <div
-                      className={Style.add_button_notes}
-                      id="addButtonNotes"
-                      onClick={toogleNotesArea}
-                      title="Add Notes here"
-                    >
-                      <button>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          fill="#fff"
+                          fill="#111B12"
+                          className="size-5"
+                          style={{ marginTop: "6px", marginLeft: "6px" }}
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div className={Style.side_bar_profile}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="size-7"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div className={Style.user_side}>
+                        <div className={Style.side_bar_user_name}>
+                          <p>{selectedUser.name}</p>
+                        </div>
+                        <div className={Style.side_bar_user_status}>
+                          <p>Available</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={Style.side_bar_message_apps}>
+                      <div className={Style.whatsapp_div}>
+                        <img
+                          className={Style.whatsapp_icon}
+                          src="whatsapp.png"
+                          alt="whatsapp_image"
+                        />
+                      </div>
+                      <div className={Style.comments_div}>
+                        <img
+                          className={Style.comments_icon}
+                          src="comments.png"
+                          alt="whatsapp_image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className={Style.side_bar_tags}>
+                    <div className={Style.tags_header}>
+                      <p>Tags</p>
+                    </div>
+                    <div className={Style.tags_selection}>
+                      <div className={Style.tags_icon}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="#d5ddeb"
                           className="size-5"
                         >
                           <path
                             fillRule="evenodd"
-                            d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                            d="M5.25 2.25a3 3 0 0 0-3 3v4.318a3 3 0 0 0 .879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 0 0 5.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 0 0-2.122-.879H5.25ZM6.375 7.5a1.125 1.125 0 1 0 0-2.25 1.125 1.125 0 0 0 0 2.25Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <input type="text" placeholder="Add a tag" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className={Style.side_bar_notes}>
+                    <div className={Style.notes_header}>
+                      <p>Notes</p>
+                      <div
+                        className={Style.add_button_notes}
+                        id="addButtonNotes"
+                        onClick={toogleNotesArea}
+                        title="Add Notes here"
+                      >
+                        <button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="#fff"
+                            className="size-5"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div className={Style.notes_paragraph}>
+                      <p>
+                        Notes help you to keep track of your conversation with
+                        your team
+                      </p>
+                    </div>
+                    {notesValue.length > 0 && (
+                      <div className={Style.get_notes_value}>
+                        <p className="font-bold">Saved Notes :</p>
+                        <ol className={Style.saved_notes}>
+                          {notesValue
+                            .filter(
+                              (note) => note.userId == selectedUser.id + ""
+                            )
+                            .map(
+                              (note, index) => (
+                                <li
+                                  key={index}
+                                  className={Style.notes_list}
+                                  style={{ listStyle: "auto" }}
+                                >
+                                  <pre>
+                                    {index + 1} . {note.note}
+                                  </pre>
+                                  <div className={Style.edit_delete}>
+                                    <div
+                                      className={Style.edit_list}
+                                      title="Edit"
+                                      onClick={() => editNote(note)}
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 26 26"
+                                        fill="currentColor"
+                                        className="size-4"
+                                      >
+                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                        <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                      </svg>
+                                    </div>
+                                    <div
+                                      className={Style.delete_list}
+                                      onClick={() => deleteNote(note.id)}
+                                      title="Delete"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 26 26"
+                                        fill="currentColor"
+                                        className="size-4 pl-[2px]"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </li>
+                              ) // Display each note as a list item
+                            )}
+                        </ol>
+                      </div>
+                    )}
+                    <div className={Style.notes_textarea} id="notesTextarea">
+                      <textarea
+                        className={`${Style.textarea_notes} ${
+                          hasInput ? Style.textarea_shadow : ""
+                        }`}
+                        id="textareaNotes"
+                        placeholder="Enter note here"
+                        value={noteValue} // Bind the value to the textarea
+                        onChange={handleInputChange}
+                        ref={textareaRef}
+                      ></textarea>
+                    </div>
+                    <div className={Style.save_delete} id="saveDelete">
+                      <button
+                        className={Style.save_btn}
+                        onClick={getNotesValues}
+                        title="Save"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="#fff"
+                          className="size-6"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className={Style.delete_btn}
+                        id="deleteNotes"
+                        onClick={deleteNotesArea}
+                        title="Close"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="#fff"
+                          className="size-6"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
                             clipRule="evenodd"
                           />
                         </svg>
                       </button>
                     </div>
                   </div>
-                  <div className={Style.notes_paragraph}>
-                    <p>
-                      Notes help you to keep track of your conversation with
-                      your team
-                    </p>
-                  </div>
-                  {notesValue.length > 0 && (
-                    <div className={Style.get_notes_value}>
-                      <p className="font-bold">Saved Notes :</p>
-                      <ol className={Style.saved_notes}>
-                        {notesValue.map((note, index) => (
-                          <li
-                            key={index}
-                            className={Style.notes_list}
-                            style={{ listStyle: "auto" }}
-                          >
-                            {index + 1} . {note}
-                            <div className={Style.edit_delete}>
-                              <div className={Style.edit_list} title="Edit" onClick={() => editNote(index)}>
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 26 26"
-                                  fill="currentColor"
-                                  className="size-4"
-                                >
-                                  <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                  <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                </svg>
-                              </div>
-                              <div
-                                className={Style.delete_list}
-                                onClick={() => deleteNote(index)}
-                                title="Delete"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 26 26"
-                                  fill="currentColor"
-                                  className="size-4 pl-[2px]"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                          </li> // Display each note as a list item
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-                  <div className={Style.notes_textarea} id="notesTextarea">
-                    <textarea
-                      className={`${Style.textarea_notes} ${
-                        hasInput ? Style.textarea_shadow : ""
-                      }`}
-                      id="textareaNotes"
-                      placeholder="Enter note here"
-                      value={noteValue} // Bind the value to the textarea
-                      onChange={handleInputChange}
-                      ref={textareaRef}
-                    ></textarea>
-                  </div>
-                  <div className={Style.save_delete} id="saveDelete">
-                    <button
-                      className={Style.save_btn}
-                      onClick={getNotesValues}
-                      title="Save"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="#fff"
-                        className="size-6"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      className={Style.delete_btn}
-                      id="deleteNotes"
-                      onClick={deleteNotesArea}
-                      title="Close"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="#fff"
-                        className="size-6"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
                 </div>
-              </div>
               )}
             </SplitterPanel>
           </Splitter>

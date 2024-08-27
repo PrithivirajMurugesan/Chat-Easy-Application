@@ -24,6 +24,9 @@ pre {
     border: darkgrey solid 2px;
     border-style: dotted;
  }
+ .p-inputtext:enabled:focus {
+  @apply shadow-none;
+ }
 
 @media only screen and (max-width: 480px) { 
 

@@ -128,7 +128,7 @@
 
 /* Main Chat Container Starts */
 .message_section {
-  @apply flex justify-center;
+  @apply flex justify-center bg-[#ece5dd];
 }
 .mobile_message_container {
   @apply w-full;
@@ -285,6 +285,10 @@ scrollbar-width: none;  /* Firefox */
 /* Main Container Ends */
 
 /* Side Bar starts */
+
+.notes_back_arrow {
+  @apply hidden;
+}
 .notes_section {
   @apply bg-white text-[#111B12];
 }
@@ -299,7 +303,7 @@ scrollbar-width: none;  /* Firefox */
   @apply flex justify-between items-center border-b-[#dadde3] border-b-[1px] pb-[15px];
 }
 .side_bar_header {
-  @apply p-1 flex gap-3;
+  @apply p-1 flex gap-3 items-center;
 }
 .side_bar_profile {
   @apply bg-green-200 p-2 rounded-[50%] cursor-pointer;
@@ -450,6 +454,10 @@ scrollbar-width: none;  /* Firefox */
 .preview_paragraph {
   @apply text-center text-[17px];
 }
+.notes_back_arrow {
+  @apply block;
+}
+
 }
 
 /* Responsive Ends */
