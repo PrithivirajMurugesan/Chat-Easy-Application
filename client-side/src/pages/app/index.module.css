@@ -127,6 +127,12 @@
 /* Aside Chat Container Ends */
 
 /* Main Chat Container Starts */
+.message_section {
+  @apply flex justify-center;
+}
+.mobile_message_container {
+  @apply w-full;
+}
 
 .message_container {
   @apply w-[100%] h-[calc(100vh-80px)] overflow-hidden;
@@ -273,12 +279,18 @@ scrollbar-width: none;  /* Firefox */
 .security_msg {
   @apply text-[12px] text-[#8696a0] mt-10;
 }
+
 /* Main Chat Container Ends */
 
 /* Main Container Ends */
 
 /* Side Bar starts */
-
+.notes_section {
+  @apply bg-white text-[#111B12];
+}
+.hide_notes {
+  @apply hidden;
+}
 .side_bar {
   @apply p-2 overflow-auto h-[calc(100vh-78px)];
   scrollbar-width: none;

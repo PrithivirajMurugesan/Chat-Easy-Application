@@ -66,7 +66,23 @@ const Home: React.FC = () => {
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    handleResize(); // Set initial value
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   const handleUserClick = (user: any) => {
     setSelectedUserId(user.id);
@@ -76,9 +92,16 @@ const Home: React.FC = () => {
     const isMobile = window.innerWidth <= 480;
     const userDiv = document.getElementById("chatContainer");
     const messageContainerDiv = document.getElementById("messageContainer");
+    const notesSection = document.getElementById("notesSection");
+
     if (userDiv && isMobile) {
       userDiv.style.display = "none";
-      if (messageContainerDiv) messageContainerDiv.style.display = "block";
+      if (messageContainerDiv){ 
+        messageContainerDiv.style.display = "block";
+      }
+      if(notesSection){
+        notesSection.style.display = "none";
+      }
     }
   };
 
@@ -460,6 +483,11 @@ const Home: React.FC = () => {
     if (selectedUser) {
       mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
     }
+    if (selectedUser && isMobile){
+    const backToChatsSection = document.querySelector(".p-splitter-horizontal");
+      (backToChatsSection as HTMLElement).style.display = "flex";
+      mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
+    }
   }, [selectedUser]);
 
   useEffect(() => {
@@ -487,6 +515,11 @@ const Home: React.FC = () => {
     const isMobile = window.innerWidth <= 480;
     const userDiv1 = document.getElementById("messageContainer");
     const userDiv = document.getElementById("chatContainer");
+    const backToChatsSection = document.querySelector(".p-splitter-horizontal");
+
+    if(isMobile && backToChatsSection ) {
+      (backToChatsSection as HTMLElement).style.display = "none";
+    }
 
     if (userDiv1 && isMobile) {
       userDiv1.style.display = "none";
@@ -863,7 +896,7 @@ return noteValue === "" ? note : noteValue;
         {selectedUser && (
           <Splitter style={{ width: "calc(100% - 27%)" }}>
             <SplitterPanel
-              className="flex align-items-center justify-content-center"
+              className={`${Style.message_section} ${isMobile ? Style.mobile_message_container : ""}`}
               size={70}
               minSize={40}
             >
@@ -1297,11 +1330,12 @@ return noteValue === "" ? note : noteValue;
                       </button>
                     </form>
                   </div>
+                  </div>
                 </div>
-              </div>
             </SplitterPanel>
             <SplitterPanel
-              className=" bg-white text-[#111B12]"
+              className={`${Style.notes_section} ${isMobile ? Style.hide_notes : "block"}`}
+              id="notesSection"
               size={30}
               minSize={28}
             >
@@ -1368,8 +1402,8 @@ return noteValue === "" ? note : noteValue;
                         />
                       </svg>
                       <input type="text" placeholder="Add a tag" />
-                    </div>
                   </div>
+          </div>
                 </div>
                 <div className={Style.side_bar_notes}>
                   <div className={Style.notes_header}>

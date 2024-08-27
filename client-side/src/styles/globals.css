@@ -24,3 +24,11 @@ pre {
     border: darkgrey solid 2px;
     border-style: dotted;
  }
+
+@media only screen and (max-width: 480px) { 
+
+  .p-splitter-horizontal{
+  width: 100% !important;
+ }
+
+}
