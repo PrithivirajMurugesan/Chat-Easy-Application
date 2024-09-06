@@ -266,6 +266,14 @@ scrollbar-width: none;  /* Firefox */
   @apply bg-[#f1f1f1];
 }
 
+.main_textarea {
+  @apply p-[10px] w-[60%] outline-none text-[#3b4a54] border-none bg-[#fff] rounded-[8px] resize-none;
+  scrollbar-width: none;
+}
+
+.show_suggestions {
+  @apply absolute top-[-70px] left-0 bg-[#fff] border-solid border-[#ccc] border-[1px] w-[60%] rounded-[4px] mt-[5px] z-[1000] text-[#111B12];
+}
 
 .preview_section {
   @apply flex flex-col items-center justify-center relative;
@@ -346,6 +354,9 @@ scrollbar-width: none;  /* Firefox */
 .tags_icon input {
   @apply border-none outline-none w-full;
 }
+.tags_list_item {
+  @apply flex items-center bg-[#e5e7eb] text-[#4b5563] py-[0.375rem] px-[0.75rem] rounded-[16px] text-[14px];
+}
 .side_bar_notes {
   @apply mt-[24px] p-2;
 }
@@ -418,10 +429,14 @@ scrollbar-width: none;  /* Firefox */
 /* Side Bar starts */
 
 .initial_chats_section {
-  @apply w-[calc(100%-414px)] ;
+  @apply w-[calc(100%-414px)] flex justify-center items-center h-screen;
 }
-.preview_section {
-  @apply top-[20%];
+
+.preview_section_chats {
+  @apply flex flex-col items-center justify-center relative;
+}
+.preview_section_chats img {
+  @apply w-[300px] h-[300px];
 }
 
 

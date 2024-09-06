@@ -1396,17 +1396,7 @@ const Home: React.FC = () => {
                         ref={mainTextAreaRef}
                         onChange={handleMessageChange}
                         placeholder="Type your message"
-                        style={{
-                          padding: "10px",
-                          width: "60%",
-                          outline: "none",
-                          color: "#3b4a54",
-                          border: "none",
-                          backgroundColor: "#fff",
-                          borderRadius: "8px",
-                          resize: "none", // Optional: prevent resizing
-                          scrollbarWidth: "none",
-                        }}
+                        className={Style.main_textarea}
                         rows={1} // Initial number of visible rows
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -1419,19 +1409,7 @@ const Home: React.FC = () => {
                       />
                       {showSuggestions && (
                         <ul
-                          style={{
-                            position: "absolute",
-                            top: "-70px",
-                            left: "0",
-                            backgroundColor: "#fff",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            width: "60%",
-                            marginTop: "5px",
-                            zIndex: 1000,
-                            color: "#111B12",
-                          }}
-                        >
+                        className={Style.show_suggestions} >
                           {suggestions.map((suggestion, index) => (
                             <li
                               key={index}
@@ -1568,7 +1546,7 @@ const Home: React.FC = () => {
                           type="text"
                           value={inputValue}
                           onChange={handleTagChange}
-                          onKeyPress={handleKeyPress}
+                          onKeyDown={handleKeyPress}
                           placeholder="Add a tag"
                           onFocus={handleFocus}
                           onBlur={handleBlur}
@@ -1581,7 +1559,7 @@ const Home: React.FC = () => {
                           userTags[selectedUser.id]?.map((item, index) => (
                             <li
                               key={index}
-                              className="flex items-center bg-[#e5e7eb] text-[#4b5563] py-[0.375rem] px-[0.75rem] rounded-[16px] text-[14px]"
+                              className={Style.tags_list_item}
                             >
                               {item}
                               <button
@@ -1755,7 +1733,7 @@ const Home: React.FC = () => {
           </Splitter>
         ) : (
           <div className={Style.initial_chats_section}>
-            <div className={Style.preview_section}>
+            <div className={Style.preview_section_chats}>
               <img src="watsap-preview.png" alt="pre-watsapp"></img>
               <p className={Style.preview_paragraph}>
                 A replica of the popular messaging platform now available!
