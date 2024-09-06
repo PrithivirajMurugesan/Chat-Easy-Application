@@ -337,6 +337,9 @@ scrollbar-width: none;  /* Firefox */
 .tags_selection {
   @apply border-[#dadde3] border-solid border-[1px] p-2 rounded-md;
 }
+.focused {
+  @apply border-green-500 border-solid border-[1px] shadow-lg;
+}
 .tags_icon {
   @apply flex items-center gap-2;
 }
@@ -411,7 +414,15 @@ scrollbar-width: none;  /* Firefox */
   @apply bg-red-500;
 }
 
+
 /* Side Bar starts */
+
+.initial_chats_section {
+  @apply w-[calc(100%-414px)] ;
+}
+.preview_section {
+  @apply top-[20%];
+}
 
 
 
@@ -456,6 +467,10 @@ scrollbar-width: none;  /* Firefox */
 }
 .notes_back_arrow {
   @apply block;
+}
+
+.initial_chats_section {
+  @apply hidden;
 }
 
 }

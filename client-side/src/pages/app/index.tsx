@@ -67,11 +67,53 @@ const Home: React.FC = () => {
   const [isRightPopupOpen, setRightPopupOpen] = useState(false); // grouping right popup opened
   const mainRightDivRef = useRef<HTMLDivElement>(null); // right profile settings main div showing
 
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null); // selecting user from the array
+  const [selectedUserId, setSelectedUserId] = useState(null); // set users id for selectedUser
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // state to manage mobile view
+  const [isFocused, setIsFocused] = useState(false);
 
+  const [inputValue, setInputValue] = useState<string>("");
+  const [userTags, setUserTags] = useState<{ [key: string]: string[] }>({});
+
+  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim() !== "" && selectedUser) {
+      setUserTags((prev) => ({
+        ...prev,
+        [selectedUser.id]: [...(prev[selectedUser.id] || []), inputValue],
+      }));
+      setInputValue("");
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    if (selectedUser) {
+      setUserTags((prev) => ({
+        ...prev,
+        [selectedUser.id]: prev[selectedUser.id].filter((_, i) => i !== index),
+      }));
+    }
+  };
+
+  // tags input focus in starts
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+  // tags input focus in ends
+
+
+  // tags input focus out starts
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+  // tags input focus out ends
+
+
+  // managing mobile view starts
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 480);
@@ -85,6 +127,10 @@ const Home: React.FC = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // managing mobile view ends
+
+  // handling user click starts
 
   const handleUserClick = (user: any) => {
     setSelectedUserId(user.id);
@@ -106,6 +152,10 @@ const Home: React.FC = () => {
       }
     }
   };
+
+  // handling user click starts
+
+  // Message sending and recieving from the client starts
 
   const sendMessage = async (e: FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
@@ -446,6 +496,8 @@ const Home: React.FC = () => {
   //   // }
   // }, [searchQuery, users]);
 
+  // Messages received from the server starts
+
   useEffect(() => {
     if (socket) {
       // Handle incoming messages
@@ -480,6 +532,10 @@ const Home: React.FC = () => {
     }
   }, [socket]);
 
+  // Messages received from the server ends
+
+  // when selecting the user to focus textarea starts
+
   useEffect(() => {
     if (selectedUser) {
       mainTextAreaRef.current?.focus(); // Focus the textarea when a user is selected
@@ -493,10 +549,18 @@ const Home: React.FC = () => {
     }
   }, [selectedUser]);
 
+  // when selecting the user to focus textarea starts
+
+  // scroll the last messages to bottom starts
+
   useEffect(() => {
     // Scroll to the latest message when sentMessages change
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [sentMessages]);
+
+  // scroll the last messages to bottom ends
+
+  // if the isdivvisible it will manage the closing state starts
 
   useEffect(() => {
     if (isDivVisible) {
@@ -511,7 +575,9 @@ const Home: React.FC = () => {
     };
   }, [isDivVisible]);
 
-  // Back to Home page starts and Close Chats
+  // if the isdivvisible it will manage the closing state ends
+
+  // Back to Home page starts and Close Chats starts
   const router = useRouter();
 
   const backToHomePage = () => {
@@ -549,7 +615,11 @@ const Home: React.FC = () => {
     router.push("/home"); // Navigate to the Home page
   };
 
+  // Back to Home page starts and Close Chats starts
+
   // Side Bar Scripts Starts
+
+  // Toogle the notesarea starts
 
   const toogleNotesArea = () => {
     const textArea = document.getElementById("notesTextarea");
@@ -560,6 +630,10 @@ const Home: React.FC = () => {
     }
     textareaRef.current?.focus();
   };
+
+  // Toogle the notesarea ends
+
+  // Toogle the deletenotesarea starts
 
   const deleteNotesArea = () => {
     const textArea = document.getElementById(
@@ -580,6 +654,8 @@ const Home: React.FC = () => {
     setNoteValue("");
     setHasInput(false); // Reset the shadow state
   };
+
+  // Toogle the deletenotesarea ends
 
   const [notesValue, setNotesValue] = useState<
     { note: string; userId: string; id: string }[]
@@ -672,7 +748,6 @@ const Home: React.FC = () => {
     );
     const sideBar = document.getElementById("mobileSideBar");
     if (isMobile && notesForMobile && mobileMessageContainer && sideBar) {
-      console.log("clickkkkkkkkkkkk");
       notesForMobile.style.display = "block";
       mobileMessageContainer.style.display = "none";
       notesForMobile.style.height = "calc(100vh - 0px)";
@@ -687,7 +762,6 @@ const Home: React.FC = () => {
     );
     const sideBar = document.getElementById("mobileSideBar");
     if (isMobile && notesForMobile && mobileMessageContainer && sideBar) {
-      console.log("closedddddddd");
       notesForMobile.style.display = "none";
       mobileMessageContainer.style.display = "block";
     }
@@ -936,7 +1010,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        {selectedUser && (
+        {selectedUser ? (
           <Splitter style={{ width: "calc(100% - 27%)" }}>
             <SplitterPanel
               className={`${Style.message_section} ${
@@ -1467,11 +1541,16 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </div>
+
                   <div className={Style.side_bar_tags}>
                     <div className={Style.tags_header}>
                       <p>Tags</p>
                     </div>
-                    <div className={Style.tags_selection}>
+                    <div
+                      className={`${Style.tags_selection} ${
+                        isFocused ? Style.focused : ""
+                      }`}
+                    >
                       <div className={Style.tags_icon}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1485,10 +1564,49 @@ const Home: React.FC = () => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        <input type="text" placeholder="Add a tag" />
+                        <input
+                          type="text"
+                          value={inputValue}
+                          onChange={handleTagChange}
+                          onKeyPress={handleKeyPress}
+                          placeholder="Add a tag"
+                          onFocus={handleFocus}
+                          onBlur={handleBlur}
+                        />
                       </div>
                     </div>
+                    <div className="flex items-center">
+                      <ul className="flex gap-3 flex-wrap">
+                        {selectedUser &&
+                          userTags[selectedUser.id]?.map((item, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center bg-[#e5e7eb] text-[#4b5563] py-[0.375rem] px-[0.75rem] rounded-[16px] text-[14px]"
+                            >
+                              {item}
+                              <button
+                                onClick={() => handleDelete(index)}
+                                className="ml-[7px] text-gray-400"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="size-5"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
                   </div>
+
                   <div className={Style.side_bar_notes}>
                     <div className={Style.notes_header}>
                       <p>Notes</p>
@@ -1635,6 +1753,18 @@ const Home: React.FC = () => {
               )}
             </SplitterPanel>
           </Splitter>
+        ) : (
+          <div className={Style.initial_chats_section}>
+            <div className={Style.preview_section}>
+              <img src="watsap-preview.png" alt="pre-watsapp"></img>
+              <p className={Style.preview_paragraph}>
+                A replica of the popular messaging platform now available!
+              </p>
+              <p className={Style.security_msg}>
+                Your personal messages are end-to-end encrypted
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>

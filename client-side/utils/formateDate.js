@@ -10,7 +10,6 @@ export const formatMessageDate = (date) => {
     // Normalize the date format to ISO 8601 if possible
     const messageDate = typeof date === 'string' ? parseISO(date) : new Date(date);
 // const messageDate = new Date ("Fri Aug 23 2024 17:26:22 GMT+0530"); // check the today, yesterday and the day
-    console.log(messageDate, "messageDate++++++++++++");
     // const messageDate = new Date('2024-08-09T09:09:59.783Z');
     if (isNaN(messageDate.getTime())) {
       console.error('Invalid date:', date);
