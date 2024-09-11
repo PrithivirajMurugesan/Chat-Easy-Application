@@ -1,7 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-
-
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 /* Offer Banener Starts */
 
@@ -82,7 +79,7 @@
 .popup_search {
   @apply bg-[#f0f2f5] flex gap-6 items-center p-[6px] px-4 mt-[30px] rounded-[8px] w-[92%] ml-4 mb-6;
 }
-.popup_search input { 
+.popup_search input {
   @apply w-full bg-transparent outline-none border-none text-[#111B12];
 }
 
@@ -90,7 +87,9 @@
   @apply flex gap-2 pb-3 ml-4;
 }
 
-.all, .unread, .groups {
+.all,
+.unread,
+.groups {
   @apply bg-[#f0f2f5] py-[6px] px-3 rounded-[42px] text-[#111B12] cursor-pointer text-[15px];
 }
 
@@ -101,7 +100,7 @@
 .search {
   @apply bg-[#f0f2f5] flex gap-6 items-center p-[6px] px-4 mt-[6px] rounded-[8px] w-[92%] ml-4 mb-6;
 }
-.search input { 
+.search input {
   @apply w-full bg-transparent outline-none border-none text-[#111B12];
 }
 
@@ -109,15 +108,18 @@
   @apply divide-y divide-gray-400 overflow-auto h-[calc(100vh-180px)];
   scrollbar-width: none;
 }
+.chat_profile img {
+  @apply w-[50px] h-[50px];
+}
 
 .individual_chat {
   @apply flex gap-3 items-center text-[#111B12] p-3 cursor-pointer;
 }
 .individual_chat:hover {
-  @apply bg-[#f0f2f5]
+  @apply bg-[#f0f2f5];
 }
 .active_chat {
-  @apply bg-[#f0f2f5]
+  @apply bg-[#f0f2f5];
 }
 
 .time_slots {
@@ -152,6 +154,9 @@
 }
 .main_back_arrow {
   @apply hidden;
+}
+.individual_profile {
+  @apply flex items-center justify-center pt-[7px] pr-[12px];
 }
 .profile_name {
   @apply flex flex-col mt-[-7px];
@@ -212,14 +217,14 @@
 }
 .message_content {
   @apply w-full overflow-auto relative;
-  -ms-overflow-style: none;  /* IE and Edge */
-scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .messages {
   @apply relative flex justify-between items-end pr-[7px] pl-[9px] pb-[5px] rounded-[8px] mt-3 break-words max-w-[60%] mb-4;
 }
 .content {
-  @apply text-[#111b21]
+  @apply text-[#111b21];
 }
 
 .file_link {
@@ -260,7 +265,7 @@ scrollbar-width: none;  /* Firefox */
   @apply bg-white p-2 rounded-[50px] cursor-pointer;
 }
 .send_image {
-@apply w-[24px] h-[24px];
+  @apply w-[24px] h-[24px];
 }
 .suggestions:hover {
   @apply bg-[#f1f1f1];
@@ -314,7 +319,7 @@ scrollbar-width: none;  /* Firefox */
   @apply p-1 flex gap-3 items-center;
 }
 .side_bar_profile {
-  @apply bg-green-200 p-2 rounded-[50%] cursor-pointer;
+  @apply bg-green-200 p-[3px] rounded-[50%] cursor-pointer;
 }
 .user_side {
   @apply flex flex-col;
@@ -328,11 +333,13 @@ scrollbar-width: none;  /* Firefox */
 .side_bar_message_apps {
   @apply flex gap-3 pr-1;
 }
-.whatsapp_div, .comments_div {
+.whatsapp_div,
+.comments_div {
   @apply shadow-md p-2 rounded-[8px] cursor-pointer;
 }
 
-.whatsapp_icon, .comments_icon {
+.whatsapp_icon,
+.comments_icon {
   @apply w-[16px] h-[16px];
 }
 
@@ -392,7 +399,7 @@ scrollbar-width: none;  /* Firefox */
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; /* Customize the shadow as needed */
 }
 .save_delete {
-  @apply  gap-3 justify-end items-center mt-3 hidden;
+  @apply gap-3 justify-end items-center mt-3 hidden;
 }
 .save_btn {
   @apply bg-green-500 rounded-lg py-2 px-3 text-[#fff];
@@ -425,7 +432,6 @@ scrollbar-width: none;  /* Firefox */
   @apply bg-red-500;
 }
 
-
 /* Side Bar starts */
 
 .initial_chats_section {
@@ -439,56 +445,51 @@ scrollbar-width: none;  /* Firefox */
   @apply w-[300px] h-[300px];
 }
 
-
-
 /* Responsive Starts */
-@media only screen and (max-width: 480px) { 
-/* .offer {
+@media only screen and (max-width: 480px) {
+  /* .offer {
   @apply animate-none;
 }
 .offer_banner{
   @apply hidden text-[14px] p-2 m-[10px];
 } */
-.content {
-  @apply max-w-[160px];
-}
-.chat_container {
-  @apply w-full;
-}
-.message_container {
-  @apply w-full;
-}
-.messages {
-  @apply max-w-[75%];
-}
-.popup_overlay {
-  @apply w-full;
-}
-.individual_chat {
-  @apply justify-around;
-}
-.back_arrow {
-  @apply block;
-}
-.main_back_arrow {
-  @apply block;
+  .content {
+    @apply max-w-[160px];
+  }
+  .chat_container {
+    @apply w-full;
+  }
+  .message_container {
+    @apply w-full;
+  }
+  .messages {
+    @apply max-w-[75%];
+  }
+  .popup_overlay {
+    @apply w-full;
+  }
+  .individual_chat {
+    @apply justify-around;
+  }
+  .back_arrow {
+    @apply block pr-[5px];
+  }
+  .main_back_arrow {
+    @apply block;
+  }
+  .preview_section {
+    @apply static;
+  }
+  .preview_paragraph {
+    @apply text-center text-[17px];
+  }
+  .notes_back_arrow {
+    @apply block;
+  }
 
-}
-.preview_section {
-  @apply static;
-}
-.preview_paragraph {
-  @apply text-center text-[17px];
-}
-.notes_back_arrow {
-  @apply block;
-}
-
-.initial_chats_section {
-  @apply hidden;
-}
-
+  .initial_chats_section {
+    @apply hidden;
+  }
 }
 
 /* Responsive Ends */
-

@@ -15,23 +15,21 @@ pre {
    left: 0;
    bottom: 70px;
 } */
- .p-splitter-gutter {
+.p-splitter-gutter {
   @apply bg-[#f9fafb] h-full;
- }
- .p-splitter-gutter-handle {
+}
+.p-splitter-gutter-handle {
   background-color: #e5e7eb;
-    height: 50px;
-    border: darkgrey solid 2px;
-    border-style: dotted;
- }
- .p-inputtext:enabled:focus {
+  height: 50px;
+  border: darkgrey solid 2px;
+  border-style: dotted;
+}
+.p-inputtext:enabled:focus {
   @apply shadow-none;
- }
+}
 
-@media only screen and (max-width: 480px) { 
-
-  .p-splitter-horizontal{
-  width: 100% !important;
- }
-
+@media only screen and (max-width: 480px) {
+  .p-splitter-horizontal {
+    width: 100% !important;
+  }
 }
