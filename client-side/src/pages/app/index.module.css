@@ -32,6 +32,13 @@
   @apply w-[27%] h-[calc(100vh-0px)] bg-[#fff] overflow-hidden;
   scrollbar-width: none;
 }
+.user_logo {
+  @apply bg-[#fff] p-[8px] w-[50px] h-[50px] rounded-[50px];
+  border: #88eb88 solid 3px;
+}
+.user_logo img {
+  @apply pt-[7px] pl-[2px] scale-150;
+}
 .profile_settings {
   @apply w-full h-14 sticky top-0 z-10 flex justify-between items-center bg-[#f0f2f5] p-3 border-r-[#d1d7db] border-solid border-[1px];
 }

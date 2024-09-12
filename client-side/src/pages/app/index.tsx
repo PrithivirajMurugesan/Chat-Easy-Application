@@ -793,10 +793,13 @@ const Home: React.FC = () => {
                   style={{ marginTop: "6px", marginLeft: "6px" }}
                 />
               </div>
-              <ProfileIcon
+              {/* <ProfileIcon
                 fill="#fff"
                 className="user_list_profile size-14 cursor-pointer mt-[15px]"
-              />
+              /> */}
+              <div className={Style.user_logo}>
+              <img src="amwhiz_Logo.svg" alt="company_Logo" />
+              </div>
             </div>
             <SettingsIcon
               className={`group_settings size-8 cursor-pointer mt-[5px] ${
