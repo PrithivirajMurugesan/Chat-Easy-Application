@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import Style from "./app/index.module.css";
+import Style from './conversation/index.module.css';
 import { Button } from "primereact/button";
 import { useState } from "react";
 

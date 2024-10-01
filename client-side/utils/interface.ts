@@ -25,6 +25,7 @@ export interface User {
 export interface IconProps {
   className?: string;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<SVGElement>) => void;
   fill?: string;
+  stroke?:string;
 }

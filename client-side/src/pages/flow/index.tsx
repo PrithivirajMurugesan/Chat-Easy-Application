@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Header from '@/components/header/header';
 import SideNav from '@/components/side-nav/sidenav';
-import Style from './index.module.css';
+import Style from './flow.module.css';
 
 
-const App: React.FC = () => {
+const Flow: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
   
     // Toggle the expansion state
@@ -14,13 +14,13 @@ const App: React.FC = () => {
     return (
       <div>
         <Header onToggleExpand={handleToggleExpand}/>
-      <div className={Style.Conversation_container}>
+      <div className={Style.Flow_container}>
         <SideNav isExpanded={isExpanded}/>  
-        <h1 className={Style.main_head}>Home</h1>
+        <h1 className={Style.main_head}>Flow</h1>
       </div>
       </div>
   
     )
   }
   
-  export default App;
+  export default Flow;
