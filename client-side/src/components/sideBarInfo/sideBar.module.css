@@ -1,140 +1,184 @@
 .all_sidebar_items {
-    @apply flex flex-col gap-5;
+  @apply flex flex-col gap-5;
 }
 
-.contact_details, .company_details, .additional_details {
-    @apply flex items-center justify-between cursor-pointer;
+.contact_details,
+.company_details,
+.additional_details {
+  @apply flex items-center justify-between cursor-pointer;
 }
-.contact_items, .company_items, .additional_items {
-    @apply flex gap-[10px] items-center
+.contact_items,
+.company_items,
+.additional_items {
+  @apply flex gap-[10px] items-center;
 }
-.contact_head, .company_head, .additional_head {
-    @apply text-[14px] text-grey-aa font-medium leading-6 tracking-[0.24px];
-  }
+.contact_head,
+.company_head,
+.additional_head {
+  @apply text-[14px] text-[#000] font-medium leading-6 tracking-[0.24px];
+}
 
-.contact_sub_items, .company_sub_items, .additional_sub_items {
-    @apply flex flex-col gap-4;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  }
-  .contact_sub_items.open_contact, .company_sub_items.open_company, .additional_sub_items.open_info {
-    padding-top: 16px;
-    max-height: 100vh; /* Set an appropriate max height based on your content */
-    opacity: 1;
-  }
-  .contact_sub_items.close_contact, .company_sub_items.close_company, .additional_sub_items.close_info {
-    padding-top: 0px;
-    max-height: 0;
-    opacity: 0;
-  }
+.contact_sub_items,
+.company_sub_items,
+.additional_sub_items {
+  @apply flex flex-col gap-4;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+.contact_sub_items.open_contact,
+.company_sub_items.open_company,
+.additional_sub_items.open_info {
+  padding-top: 16px;
+  max-height: 100vh; /* Set an appropriate max height based on your content */
+  opacity: 1;
+}
+.contact_sub_items.close_contact,
+.company_sub_items.close_company,
+.additional_sub_items.close_info {
+  padding-top: 0px;
+  max-height: 0;
+  opacity: 0;
+}
 
-.name_label, .phone_label, .email_label, .owner_label, .tags_label, .company_label, .contact_id_label, .lead_label, .appoinment_label, .language_label  {
-    @apply text-[12px] text-[#48535B] leading-[18px] font-medium;
+.name_label,
+.phone_label,
+.email_label,
+.owner_label,
+.tags_label,
+.company_label,
+.contact_id_label,
+.lead_label,
+.appoinment_label,
+.language_label {
+  @apply text-[12px] text-[#48535B] leading-[18px] font-medium;
 }
-.name_field, .email_field {
-    @apply md:w-full text-[14px] text-grey-aa font-medium leading-[21px];
-    border: #E5E9EB solid 1px;
-    padding: 6px 8px;
+.name_field,
+.email_field {
+  @apply md:w-full text-[14px] text-[#000] font-medium leading-[21px];
+  border: #e5e9eb solid 1px;
+  padding: 6px 8px;
 }
-.name_field::placeholder, .email_field::placeholder, .owner_field::placeholder, .company_input_field::placeholder {
-    @apply text-[14px] font-normal;
+.name_field::placeholder,
+.email_field::placeholder,
+.owner_field::placeholder,
+.company_input_field::placeholder {
+  @apply text-[14px] font-normal;
 }
-.name_body, .phone_body, .email_body, .owner_body, .tags_body, .company_name, .company_website, .company_contact_id, .lead_body, .appoinment_body, .language_body {
-    @apply flex flex-col gap-2;
+.name_body,
+.phone_body,
+.email_body,
+.owner_body,
+.tags_body,
+.company_name,
+.company_website,
+.company_contact_id,
+.lead_body,
+.appoinment_body,
+.language_body {
+  @apply flex flex-col gap-2;
 }
 .markrting_details {
-    @apply py-1 px-[10px];
+  @apply py-1 px-[10px];
 }
 .market_head {
-    @apply text-[12px] text-[#0C0C0C] leading-[18px] font-medium;
+  @apply text-[12px] text-[#0C0C0C] leading-[18px] font-medium;
 }
 .body_content {
-    @apply text-[#666668] text-[12px] font-normal leading-4 text-justify;
+  @apply text-[#666668] text-[12px] font-normal leading-4 text-justify;
 }
 .market_body {
-    @apply  bg-[#F7F7FE] p-[10px] rounded-[10px] mt-1 flex flex-col gap-[6px];
+  @apply bg-[#F7F7FE] p-[10px] rounded-[10px] mt-1 flex flex-col gap-[6px];
 }
 .market_choose {
-    @apply bg-white border border-[#E5E9EB] border-solid outline-none py-[6px] px-[10px] rounded-[4px] text-[12px] text-[#8C8C8C] font-normal leading-[21px];
+  @apply bg-white border border-[#E5E9EB] border-solid outline-none py-[6px] px-[10px] rounded-[4px] text-[12px] text-[#8C8C8C] font-normal leading-[21px];
 }
 
 .market_select select {
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    -ms-appearance:none;
-    appearance:none;
-    outline:0;
-    box-shadow:none;
-    border: #E5E9EB solid 1px;
-    background: #fff;
-    background-image: none;
-    flex: 1;
-    padding: 7.5px 10px;
-    color:#8C8C8C;
-    cursor:pointer;
-    font-size: 12px;
- }
- .market_select select::-ms-expand {
-    display: none;
- }
- .market_select {
-    position: relative;
-    display: flex;
-    width: 146px;
-    line-height: 3;
-    background: #fff;
-    overflow: hidden;
-    border-radius: .25em;
- }
- .market_select::after {
-    content: url('/assets/arrow-down.svg');
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0 1em;
-    cursor:pointer;
-    pointer-events:none;
-    transition:.25s all ease;
- }
-.Owner_field, .lead_field, .language_field {
-    @apply border border-[#E5E9EB] border-solid shadow-none h-[36px] items-center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: #e5e9eb solid 1px;
+  background: #fff;
+  background-image: none;
+  flex: 1;
+  padding: 7.5px 10px;
+  color: #8c8c8c;
+  cursor: pointer;
+  font-size: 12px;
 }
-.Owner_field span, .lead_field span, .language_field span {
-    @apply text-grey-aa text-[14px] leading-[22px] font-normal;
+.market_select select::-ms-expand {
+  display: none;
 }
-.language_field span::placeholder, .lead_field span::placeholder, .Owner_field span::placeholder {
-    @apply text-[14px] font-normal text-[#8C8C8C];
+.market_select {
+  position: relative;
+  display: flex;
+  width: 146px;
+  line-height: 3;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 0.25em;
+}
+.market_select::after {
+  content: url("/assets/arrow-down.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  cursor: pointer;
+  pointer-events: none;
+  transition: 0.25s all ease;
+}
+.Owner_field,
+.lead_field,
+.language_field {
+  @apply border border-[#E5E9EB] border-solid shadow-none h-[36px] items-center;
+}
+.Owner_field span,
+.lead_field span,
+.language_field span {
+  @apply text-[#000] text-[14px] leading-[22px] font-normal;
+}
+.language_field span::placeholder,
+.lead_field span::placeholder,
+.Owner_field span::placeholder {
+  @apply text-[14px] font-normal text-[#8C8C8C];
 }
 
 .tags_selection {
-    @apply border-[#dadde3] border-solid border-[1px] p-2 rounded-md h-[36px] items-center flex mt-2;
-  }
-  .focused {
-    @apply border-green-500 border-solid border-[1px] shadow-lg;
-  }
-  .tags_icon {
-    @apply flex items-center gap-2;
-  }
-  .tags_icon input {
-    @apply border-none outline-none md:w-full;
-  }
-  .company_field, .contact_id_field, .appoinment_field {
-    @apply flex border border-[#E5E9EB] border-solid py-[7px] px-[8px] rounded-[4px] justify-between items-center;
-  }
-  .company_input_field, .contact_id_input_field {
-    @apply md:w-full text-[14px] text-grey-aa font-medium leading-[21px];
-  }
-  .company_dropdown {
-    @apply text-[14px] font-normal border border-[#E5E9EB] border-solid py-[7px] px-[8px] rounded-[4px] shadow-none;
-  }
-  .appoinment_field span {
-    @apply md:w-full;
-  }
-  .appoinment_field span input {
-    @apply shadow-none;
-  }
-  .appoinment_field span input::placeholder {
-    @apply text-[14px] font-normal;
-  }
+  @apply border-[#dadde3] border-solid border-[1px] p-2 rounded-md h-[36px] items-center flex mt-2;
+}
+.focused {
+  @apply border-green-500 border-solid border-[1px] shadow-lg;
+}
+.tags_icon {
+  @apply flex items-center gap-2;
+}
+.tags_icon input {
+  @apply border-none outline-none md:w-full;
+}
+.company_field,
+.contact_id_field,
+.appoinment_field {
+  @apply flex border border-[#E5E9EB] border-solid py-[7px] px-[8px] rounded-[4px] justify-between items-center;
+}
+.company_input_field,
+.contact_id_input_field {
+  @apply md:w-full text-[14px] text-[#000] font-medium leading-[21px];
+}
+.company_dropdown {
+  @apply text-[14px] font-normal border border-[#E5E9EB] border-solid py-[7px] px-[8px] rounded-[4px] shadow-none;
+}
+.appoinment_field span {
+  @apply md:w-full;
+}
+.appoinment_field span input {
+  @apply shadow-none;
+}
+.appoinment_field span input::placeholder {
+  @apply text-[14px] font-normal;
+}

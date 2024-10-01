@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode } from "react";
 
 // Define the types for the context values
 interface NavContextType {
@@ -20,7 +20,7 @@ export const NavProvider = ({ children }: NavProviderProps) => {
 
   // Toggle the expand/collapse state
   const toggleExpand = () => {
-    setIsExpanded(prevState => !prevState);
+    setIsExpanded((prevState) => !prevState);
   };
 
   return (
@@ -34,7 +34,7 @@ export const NavProvider = ({ children }: NavProviderProps) => {
 export const useNav = () => {
   const context = useContext(NavContext);
   if (context === undefined) {
-    throw new Error('useNav must be used within a NavProvider');
+    throw new Error("useNav must be used within a NavProvider");
   }
   return context;
 };

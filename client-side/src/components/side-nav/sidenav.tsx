@@ -114,10 +114,12 @@ const SideNav: React.FC<SideNavProps> = () => {
 
   const [isHovered, setIsHovered] = useState(false);
 
-
   // Close the card when clicking outside
-  const handleClickOutside = (event : any) => {
-    if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+  const handleClickOutside = (event: any) => {
+    if (
+      profileRef.current &&
+      !profileRef.current.contains(event.target as Node)
+    ) {
       setIsHovered(false); // Hide the card if click is outside
     }
   };
@@ -140,7 +142,7 @@ const SideNav: React.FC<SideNavProps> = () => {
   return (
     <div className={Style.side_nav}>
       <div
-      ref={profileRef}
+        ref={profileRef}
         className={`${Style.side_nav_info} ${isExpanded ? Style.expanded : ""}`}
       >
         <div className={Style.main_profile} onClick={toggleCard}>

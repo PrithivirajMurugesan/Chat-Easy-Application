@@ -1088,7 +1088,7 @@ const Home: React.FC = () => {
                     <select
                       // value={selectedOption}
                       // onChange={handleSelectChange}
-                      className="bg-transparent outline-none pr-2 mr-2 text-grey-aa"
+                      className="bg-transparent outline-none pr-2 mr-2 text-[#000]"
                     >
                       <option value="Contact">Contact</option>
                       <option value="Messages">Messages</option>
@@ -1106,7 +1106,7 @@ const Home: React.FC = () => {
                     // onBlur={() => {setIsInputFocused(false)}}
                   />
                   {isInputFocused ? (
-                    <button className=" text-grey-aa" onClick={handleClear}>
+                    <button className=" text-[#000]" onClick={handleClear}>
                       ✖
                     </button>
                   ) : (
@@ -1123,20 +1123,20 @@ const Home: React.FC = () => {
       <select
         value={selectedOption}
         onChange={handleSelectChange}
-        className="bg-transparent outline-none pr-2 mr-2 text-grey-aa"
+        className="bg-transparent outline-none pr-2 mr-2 text-[#000]"
       >
         <option value="Contact">Contact</option>
         <option value="Messages">Messages</option>
       </select>
       <input
         type="text"
-        className="flex-grow px-2 outline-none text-grey-aa w-full text-[13px]"
+        className="flex-grow px-2 outline-none text-[#000] w-full text-[13px]"
         value={`${inputValues}`}
         onChange={handleInputChanges}
         placeholder="Search"
       />
       {selectedOption ? (
-        <button onClick={handleClear} className="ml-2 text-grey-aa">
+        <button onClick={handleClear} className="ml-2 text-[#000]">
           ✖
         </button>
       ) : (
@@ -1330,7 +1330,11 @@ const Home: React.FC = () => {
                       <img src="assets/down-arrow.svg" alt="down arrow" />
                     </button>
                     <div>
-                      <img src="assets/remainder.svg" alt="remainder icon" style={{cursor: 'pointer'}} />
+                      <img
+                        src="assets/remainder.svg"
+                        alt="remainder icon"
+                        style={{ cursor: "pointer" }}
+                      />
                     </div>
                     <SearchIcon className="individual_search size-5 cursor-pointer" />
                     <SettingsIcon

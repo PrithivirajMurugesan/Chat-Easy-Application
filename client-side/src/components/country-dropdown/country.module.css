@@ -1,5 +1,5 @@
 .country_dropdown {
-  @apply bg-[#F7F7FE] md:w-[4rem] h-[35px] shadow-none text-[14px] font-medium leading-[24px] text-grey-aa;
+  @apply bg-[#F7F7FE] md:w-[4rem] h-[35px] shadow-none text-[14px] font-medium leading-[24px] text-[#000];
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   border-top-right-radius: 0;
@@ -9,8 +9,8 @@
   @apply justify-start;
 }
 .phone_field {
-  @apply pl-2 md:w-[70%] text-[14px] text-grey-aa font-normal;
+  @apply pl-2 md:w-[70%] text-[14px] text-[#000] font-normal;
 }
 .phone_field ::placeholder {
-    @apply text-[14px];
+  @apply text-[14px];
 }

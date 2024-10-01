@@ -11,7 +11,6 @@
   height: calc(100vh - 49.2px);
   scrollbar-width: none;
   overflow: auto;
-
 }
 .expanded .profile_card {
   left: 170px;
@@ -116,7 +115,7 @@
   opacity: 1;
 }
 .main_profile {
-  @apply relative cursor-pointer flex gap-[6px] items-center text-grey-aa text-[13px] font-medium leading-5;
+  @apply relative cursor-pointer flex gap-[6px] items-center text-[#000] text-[13px] font-medium leading-5;
 }
 .main_profile_down {
   @apply md:w-[13px] absolute bg-[#fff] rounded-[50px] right-0 top-[28px];
@@ -125,7 +124,7 @@
   @apply top-4;
 }
 .side_nav_options {
-  @apply pt-[14px] flex flex-col gap-[6px] text-grey-aa;
+  @apply pt-[14px] flex flex-col gap-[6px] text-[#000];
 }
 .set_options_first,
 .set_options_second,

@@ -4,10 +4,9 @@ import { InputText } from "primereact/inputtext";
 import FilterDemo from "../country-dropdown";
 import { Dropdown } from "primereact/dropdown";
 import { DeleteChips, TagsIcon } from "../../../utils/icons";
-import { Calendar } from 'primereact/calendar';
+import { Calendar } from "primereact/calendar";
 
 export default function SideBarInfo() {
-
   // contact details function starts
 
   const [nameValue, setNameValue] = useState("");
@@ -378,14 +377,14 @@ export default function SideBarInfo() {
               <div className={Style.appoinment_body}>
                 <p className={Style.appoinment_label}>Appointment date</p>
                 <div className={Style.appoinment_field}>
-                <Calendar 
-                value={isAppoinmentDate}
-                className={Style.appoinment_input_field}
-                placeholder="dd-mm-yy"
-                 onChange={(e : any) => setIsAppoinmentDate(e.value)}
+                  <Calendar
+                    value={isAppoinmentDate}
+                    className={Style.appoinment_input_field}
+                    placeholder="dd-mm-yy"
+                    onChange={(e: any) => setIsAppoinmentDate(e.value)}
                   />
-                <img src="assets/date_icon.svg" alt="Company Web" />
-              </div>
+                  <img src="assets/date_icon.svg" alt="Company Web" />
+                </div>
               </div>
             </div>
             <div className={Style.language_name}>

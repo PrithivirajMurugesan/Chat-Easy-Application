@@ -13,33 +13,15 @@ import { Calendar } from "primereact/calendar";
 import { MultiSelect } from "primereact/multiselect";
 import { Slider } from "primereact/slider";
 import { Tag } from "primereact/tag";
-import { CustomerService } from "./CustomerService";
 import { Avatar } from "primereact/avatar";
 import ButtonComponent from "@/components/button";
 import SliderComponent from "@/components/slider";
+import { Contacts } from "./CustomerService";
 import ReusableTable from "@/components/table/ReusableTable";
-
+import { Badge } from "primereact/badge";
+import Style from "./all-contact.module.css";
 
 export default function CustomersDemo() {
-
-  const generateColumns = () => {
-    return [
-        { field: 'name', header: 'Name' },
-        { field: 'ph.no', header: 'Phone' },
-        { field: 'company', header: 'Company' },
-        { field: 'date', header: 'Date' },
-        { field: 'status', header: 'Status' },
-        { field: 'verified', header: 'Verified' },
-        { field: 'activity', header: 'Activity' },
-        { field: 'representative.name', header: 'Representative' },
-        { field: 'tags', header: 'Tags' },
-        { field: 'createdDate', header: 'Created Date' },
-        { field: 'lastUpdated', header: 'Last Updated' },
-        { field: 'balance', header: 'Balance' }
-    ];
-};
-  const [customers, setCustomers] = useState([]);
-  const [selectedCustomers, setSelectedCustomers] = useState<any>(null);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: {
@@ -66,25 +48,6 @@ export default function CustomersDemo() {
     activity: { value: null, matchMode: FilterMatchMode.BETWEEN },
   });
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [representatives] = useState([
-    { name: "Yes" },
-    { name: "Yes" },
-    { name: "No" },
-    { name: "Yes" },
-    { name: "No" },
-    { name: "No" },
-    { name: "Yes" },
-    { name: "Yes" },
-    { name: "No" },
-    { name: "Yes" },
-  ]);
-  const [statuses] = useState([
-    "unqualified",
-    "qualified",
-    "new",
-    "negotiation",
-    "renewal",
-  ]);
 
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -94,62 +57,14 @@ export default function CustomersDemo() {
     setIsSliderOpen(true);
   };
 
-    // Open sidebar for updating a contact
-    const handleRowClick = () => {
-      setIsEditMode(true); // Set to true for updating a contact
-      setIsSliderOpen(true);     // Open the sidebar
+  // Open sidebar for updating a contact
+  const handleRowClick = () => {
+    setIsEditMode(true); // Set to true for updating a contact
+    setIsSliderOpen(true); // Open the sidebar
   };
 
   const handleCloseSlider = () => {
     setIsSliderOpen(false);
-  };
-
-  const getSeverity = (status: any) => {
-    switch (status) {
-      case "unqualified":
-        return "danger";
-
-      case "qualified":
-        return "success";
-
-      case "new":
-        return "info";
-
-      case "negotiation":
-        return "warning";
-
-      case "renewal":
-        return null;
-    }
-  };
-
-  useEffect(() => {
-    CustomerService.getCustomersLarge().then((data) =>
-      setCustomers(getCustomers(data) as any)
-    );
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const getCustomers = (data: any) => {
-    return [...(data || [])].map((d) => {
-      d.date = new Date(d.date);
-
-      return d;
-    });
-  };
-
-  const formatDate = (value: any) => {
-    return value.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const formatCurrency = (value: any) => {
-    return value.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
   };
 
   const [isInputVisible, setIsInputVisible] = useState(false); // State to toggle input visibility
@@ -249,346 +164,77 @@ export default function CustomersDemo() {
     );
   };
 
-  const countryBodyTemplate = (rowData: any) => {
-    return (
-      <div className="flex align-items-center gap-2">
-        {/* <img alt="flag" src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{ width: '24px' }} /> */}
-        <span className="text-[14px] font-normal leading-[24px] text-[#252C32]">
-          {rowData?.ph?.no}
-        </span>
-      </div>
-    );
-  };
-
-  const representativeBodyTemplate = (rowData: any) => {
-    const representative = rowData.representative;
-
-    return (
-      <div className="flex align-items-center gap-2">
-        {/* <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" /> */}
-        <span
-          className={`${
-            representative.name === "Yes" ? "text-[#119C2B]" : "text-[#CF940A]"
-          } text-[14px] font-normal leading-[24px]`}
-        >
-          {representative.name}
-        </span>
-      </div>
-    );
-  };
-
-  const representativeFilterTemplate = (options: any) => {
-    return (
-      <React.Fragment>
-        <div className="mb-3 font-bold">Agent Picker</div>
-        <MultiSelect
-          value={options.value}
-          options={representatives}
-          itemTemplate={representativesItemTemplate}
-          onChange={(e) => options.filterCallback(e.value)}
-          optionLabel="name"
-          placeholder="Any"
-          className="p-column-filter"
-        />
-      </React.Fragment>
-    );
-  };
-
-  const representativesItemTemplate = (option: any) => {
-    return (
-      <div className="flex align-items-center gap-2">
-        {/* <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" /> */}
-        <span>{option.name}</span>
-      </div>
-    );
-  };
-
-  const dateBodyTemplate = (rowData: any) => {
-    return formatDate(rowData.date);
-  };
-
-  const dateFilterTemplate = (options: any) => {
-    return (
-      <Calendar
-        value={options.value}
-        onChange={(e) => options.filterCallback(e.value, options.index)}
-        dateFormat="mm/dd/yy"
-        placeholder="mm/dd/yyyy"
-        mask="99/99/9999"
-      />
-    );
-  };
-
-  const balanceBodyTemplate = (rowData: any) => {
-    return formatCurrency(rowData.balance);
-  };
-
-  const balanceFilterTemplate = (options: any) => {
-    return (
-      <InputNumber
-        value={options.value}
-        onChange={(e) => options.filterCallback(e.value, options.index)}
-        mode="currency"
-        currency="USD"
-        locale="en-US"
-      />
-    );
-  };
-
-  const statusBodyTemplate = (rowData: any) => {
-    return (
-      <Tag value={rowData.status} severity={getSeverity(rowData.status)} />
-    );
-  };
-
-  const statusFilterTemplate = (options: any) => {
-    return (
-      <Dropdown
-        value={options.value}
-        options={statuses}
-        onChange={(e) => options.filterCallback(e.value, options.index)}
-        itemTemplate={statusItemTemplate}
-        placeholder="Select One"
-        className="p-column-filter"
-        showClear
-      />
-    );
-  };
-
-  const statusItemTemplate = (option: any) => {
-    return <Tag value={option} severity={getSeverity(option)} />;
-  };
-
-  const activityBodyTemplate = (rowData: any) => {
-    return (
-      <ProgressBar
-        value={rowData.activity}
-        showValue={false}
-        style={{ height: "6px" }}
-      ></ProgressBar>
-    );
-  };
-
-  const activityFilterTemplate = (options: any) => {
-    return (
-      <>
-        <Slider
-          value={options.value}
-          onChange={(e) => options.filterCallback(e.value)}
-          range
-          className="m-3"
-        ></Slider>
-        <div className="flex align-items-center justify-content-between px-2">
-          <span>{options.value ? options.value[0] : 0}</span>
-          <span>{options.value ? options.value[1] : 100}</span>
-        </div>
-      </>
-    );
-  };
-
-  const actionBodyTemplate = () => {
-    return <Button type="button" icon="pi pi-cog" rounded></Button>;
-  };
-
-  const nameTemplate = (rowData: any) => {
-    const initials = rowData.name
-      .split(" ")
-      .map((name: any) => name[0])
-      .join("")
-      .split("")
-      .shift();
-    return (
-      <div className="flex align-items-center">
-        <Avatar
-          label={initials}
-          className={`${
-            initials === "J" || initials === "L"
-              ? "mr-2 rounded-full bg-[#FEF5FF]"
-              : "mr-2 rounded-full bg-[#F5FFF7]"
-          }`}
-        />
-        <span className="text-[14px] font-normal leading-[24px] text-[#252C32]">
-          {rowData.name}
-        </span>
-      </div>
-    );
-  };
-
-  const tagsTemplate = (rowData: any) => {
-    return (
-      <div>
-        {rowData?.tags?.slice(0, 3).map((tag: any, index: any) => (
-          <Tag
-            key={index}
-            value={tag}
-            className={tag}
-                        // {`mr-1 rounded-xl px-2 py-[2px] font-normal text-[12px] ${
-            //   index < 2
-            //     ? "bg-[#F9F5FF] text-blue-600"
-            //     : "bg-[#FDF2FA] text-[#C11574]"
-            // }`}
-          />
-        ))}
-        {rowData?.tags?.length > 3 && (
-          <Tag
-            value={`+${rowData.tags.length - 3}`}
-            className="bg-[#F2F4F7] text-[#344054] font-normal text-[12px] rounded-xl px-2 py-[2px]"
-          />
-        )}
-      </div>
-    );
-  };
-
-  // updated the rowClick Event in the SideBar Component
-
-  const [updatedContact, setUpdatedContact] = useState(null);
-
-  const [activeRow, setActiveRow] = useState(null);
-  // Function to toggle the dropdown menu for a row
-  const toggleOptions = (id: any) => {
-    setActiveRow(activeRow === id ? null : id); // Close if it's already open
-  };
-
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // Close dropdown if clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setActiveRow(null); // Close the dropdown if clicked outside
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
-  useEffect(() => {
-    
-    // console.log(selectedCustomers);
-  }, [selectedCustomers]);
-
-  const actionsTemplate = (rowData: any) => {
-    return (
-      <div className="relative">
-        <Button
-          icon="pi pi-ellipsis-v"
-          className="p-button-text"
-          onClick={() => toggleOptions(rowData.id)}
-        />
-        {activeRow === rowData.id && (
-          <div
-            ref={dropdownRef}
-            className="absolute top-9 right-3 rounded-xl md:min-w-[300px] bg-white border-solid border-[#ccc] border-[1px] p-[10px] z-50 shadow-xl"
-          >
-            <div className="flex gap-[10px] p-[6px]">
-              <img src="assets/whatsapp-icon.svg" alt="whatsapp icon" />
-              <p
-                className="text-[14px] text-[#48535B]"
-                onClick={() => alert(`Send message to ${rowData.phone}`)}
-              >
-                Send Message to {rowData.ph.no}
-              </p>
-            </div>
-            <div className="flex gap-[10px] p-[6px]">
-              <img src="assets/Delete.svg" alt="whatsapp icon" />
-              <p
-                className="text-[#D15757] text-[14px]"
-                onClick={() => deleteContact(rowData.id)}
-              >
-                Delete Contact
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const deleteContact = (id: any) => {
-    const updatedCustomers = customers.filter(
-      (customer: any) => (customer as any).id !== id
-    );
-    console.log(updatedCustomers); // Update your state or handle the delete
-    // Here you would update your state to remove the contact
-  };
-
   const header = renderHeader();
 
-  const customersDetails = CustomerService.getData();
-  const columns = generateColumns();
+  const [filteredContacts, setFilteredContacts] = useState(Contacts);
 
-    useEffect(() => {
-        const data = CustomerService.getData(); // Fetch the data from CustomerService
-        setCustomers(data as any);  // Set the data in the state
-    }, []);
+  const columns = [
+    {
+      field: "name",
+      header: "Name",
+      className: Style["name_column"],
+    },
+    {
+      field: "phone",
+      header: "Phone",
+      className: Style["phone_column"],
+    },
+    {
+      field: "optIn",
+      header: "Marketing OPT-IN",
+      className: Style["option_column"],
+      body: (rowData: any) => (
+        <span style={{ color: rowData.optIn === "Yes" ? "green" : "orange" }}>
+          {rowData.optIn}
+        </span>
+      ),
+    },
+    {
+      field: "tags",
+      header: "Tags",
+      className: Style["tags_column"],
+      body: (rowData: any) => (
+        <div>
+          {rowData?.tags?.slice(0, 3).map((tag: any, index: any) => (
+            <Tag
+              key={index}
+              value={tag}
+              className={`${Style.tags_batches} ${tag.toLowerCase()}`}
+            />
+          ))}
+          {rowData?.tags?.length > 3 && (
+            <Tag
+              value={`+${rowData.tags.length - 3}`}
+              className="bg-[#F2F4F7] text-[#344054] font-normal text-[12px] rounded-xl px-2 py-[2px]"
+            />
+          )}
+        </div>
+      ),
+    },
+    {
+      field: "createdDate",
+      header: "Created Date",
+      className: Style["created_column"],
+      body: (rowData: any) => rowData.createdDate,
+    },
+    {
+      field: "lastUpdated",
+      header: "Last Updated",
+      className: Style["updated_column"],
+      body: (rowData: any) => rowData.lastUpdated,
+    },
+  ];
 
   return (
     <div className="card">
       <ReusableTable
-       data={customersDetails} 
-      columns={columns}
-      // globalFilterFields={['name', 'phone']}
-      
-      />
-      <DataTable
-        value={customers}
-        paginator
+        data={filteredContacts}
+        columns={columns}
         header={header}
-        rows={8}
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        rowsPerPageOptions={[10, 25, 50]}
-        dataKey="id"
-        selectionMode="checkbox"
-        selection={selectedCustomers}
-        onSelectionChange={(e) => setSelectedCustomers(e.value)}
-        filters={filters}
-        filterDisplay="menu"
-        globalFilterFields={[
-          "name",
-          "ph.no",
-          "representative.name",
-          "tags",
-          "status",
-        ]}
-        emptyMessage="No customers found."
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        onRowClick={(e) => {
-          handleRowClick();
-          setSelectedCustomers(e.data);
-        }}
-      >
-        <Column
-          selectionMode="multiple"
-          headerStyle={{ width: "3rem" }}
-        ></Column>
-        {/* if want to add filter sorted use this "-- sortable filter filterPlaceholder="Search by name"-- " */}
-        <Column field="name" header="Name" body={nameTemplate} />
-        {/* if want to add filter sorted use this "-- sortable filterField="country.name" filter filterPlaceholder="Search by country" -- " */}
-        <Column field="ph.no" header="Phone" body={countryBodyTemplate} />
-        {/* if want to add filter and sorrted use this "-- sortable sortField="representative.name" filterField="representative" filter filterElement={representativeFilterTemplate} --" */}
-        <Column
-          header="Marketing OPT-IN"
-          showFilterMatchModes={false}
-          filterMenuStyle={{ width: "14rem" }}
-          body={representativeBodyTemplate}
-        />
-        {/* if want to add filter and sorted use this "-- sortable filterField="date" filter filterElement={dateFilterTemplate} --" */}
-        <Column field="tags" header="Tags" body={tagsTemplate} />
-        <Column
-          field="createdDate"
-          style={{ fontSize: "14px", fontWeight: "400" }}
-          header="Created Date"
-        />
-        <Column
-          field="lastUpdated"
-          style={{ fontSize: "14px", fontWeight: "400" }}
-          header="Last Updated"
-        />
-        <Column body={actionsTemplate} />
-        {/* <Column field="date" header="Date" dataType="date" body={dateBodyTemplate} /> */}
-      </DataTable>
+        onRowClick={handleRowClick}
+        // selectionMode='multiple'
+        // globalFilterFields={['name', 'phone']}
+      />
     </div>
   );
 }
