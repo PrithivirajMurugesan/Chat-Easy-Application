@@ -123,7 +123,9 @@
 .all_list_sidebar {
   @apply flex flex-col gap-5;
 }
-.contact_details,.company_details,.basic_details {
+.contact_details,
+.company_details,
+.basic_details {
   @apply flex items-center justify-between cursor-pointer;
 }
 .contact_items,
@@ -134,7 +136,7 @@
 .contact_head,
 .company_head,
 .basic_head {
-  @apply text-[14px] text-grey-aa font-medium leading-6 tracking-[0.24px];
+  @apply text-[14px] text-[#000] font-medium leading-6 tracking-[0.24px];
 }
 
 .contact_sub_items,
@@ -651,7 +653,7 @@
 }
 
 .delete_chips_btn {
-  @apply ml-[7px] text-grey-aa;
+  @apply ml-[7px] text-[#000];
 }
 .side_bar_notes {
   @apply mt-[24px];

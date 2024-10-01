@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import React, { useEffect, useState } from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const Circular24HourTimer = () => {
   const [percentage, setPercentage] = useState(0);
@@ -20,8 +20,8 @@ const Circular24HourTimer = () => {
     setPercentage(dayPercentage);
 
     // Update the time display
-    setTime(`${String(hours).padStart(2, '0')}:
-    ${String(minutes).padStart(2, '0')}
+    setTime(`${String(hours).padStart(2, "0")}:
+    ${String(minutes).padStart(2, "0")}
     `);
   };
 
@@ -34,10 +34,17 @@ const Circular24HourTimer = () => {
   }, []);
 
   return (
-    <div style={{ width: 45, height: 45, marginRight:"20px" }}>
-       <svg style={{ height: 0 }}>
+    <div style={{ width: 45, height: 45, marginRight: "20px" }}>
+      <svg style={{ height: 0 }}>
         <defs>
-          <radialGradient id="gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <radialGradient
+            id="gradient"
+            cx="50%"
+            cy="50%"
+            r="50%"
+            fx="50%"
+            fy="50%"
+          >
             <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="100%" stopColor="#7012CE" />
           </radialGradient>
@@ -47,10 +54,10 @@ const Circular24HourTimer = () => {
         value={percentage}
         text={time}
         styles={buildStyles({
-          pathColor: 'url(#gradient)',
-          textColor: '#000000',
-          trailColor: '#d6d6d6',
-          backgroundColor: '#3e98c7',
+          pathColor: "url(#gradient)",
+          textColor: "#000000",
+          trailColor: "#d6d6d6",
+          backgroundColor: "#3e98c7",
           strokeWidth: 4,
         })}
       />

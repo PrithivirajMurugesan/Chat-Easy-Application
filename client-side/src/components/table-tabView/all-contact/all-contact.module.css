@@ -1,0 +1,11 @@
+.name_column,
+.phone_column,
+.option_column,
+.tags_column,
+.created_column,
+.updated_column {
+  @apply text-[14px] font-normal leading-[24px] text-[#252C32];
+}
+.tags_batches {
+  @apply mr-1 rounded-xl px-2 py-[2px] font-normal text-[12px];
+}

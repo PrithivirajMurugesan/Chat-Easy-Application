@@ -5,16 +5,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body {
+body, .p-component {
   /* background-color: #ece5dd; */
-  color: #fff;
+  /* color: #fff; */
   font-family: "Poppins", sans-serif;
 }
 pre {
   font-family: "Poppins", sans-serif;
 }
 
-@layer utilities {
 .p-splitter-gutter {
   @apply bg-[#f9fafb] h-full;
 }
@@ -128,7 +127,7 @@ td {
 }
 /* Sidebar Styles Ends  */
 .p-dropdown-label {
-  @apply text-grey-aa;
+  @apply text-[#000];
 }
 .p-dropdown-label.p-placeholder {
   @apply text-[#8C8C8C] text-[14px] font-normal;
@@ -139,9 +138,25 @@ td {
     width: 100% !important;
   }
 }
-}
+
 .user_details h4,
 .user_details p,
 .more {
-    @apply text-grey-aa;
+    @apply text-[#000];
+}
+
+.sales {
+  @apply bg-[#F9F5FF] text-blue-600;
+}
+.vip {
+  @apply bg-[#FDF2FA] text-[#C11574];
+}
+.marketing {
+@apply bg-[#F9F5FF] text-[#6941C6];
+}
+.label {
+  @apply bg-[#FDF2FA] text-[#C4320A];
+}
+.products {
+  @apply bg-[#f5f4f6] text-[#ed71b5]
 }

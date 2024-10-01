@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Header from '@/components/header/header';
-import Style from './index.module.css';
-import SideNav from '@/components/side-nav/sidenav';
-import TabViewTable from '@/components/table-tabView/tab-view';
+import React, { useState } from "react";
+import Header from "@/components/header/header";
+import Style from "./index.module.css";
+import SideNav from "@/components/side-nav/sidenav";
+import TabViewTable from "@/components/table-tabView/tab-view";
 
 const Contact: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -13,15 +13,13 @@ const Contact: React.FC = () => {
   };
   return (
     <div>
-      <Header onToggleExpand={handleToggleExpand}/>
-    <div className={Style.Contact_container}>
-      <SideNav isExpanded={isExpanded}/>
-      <TabViewTable/>
-
+      <Header onToggleExpand={handleToggleExpand} />
+      <div className={Style.Contact_container}>
+        <SideNav isExpanded={isExpanded} />
+        <TabViewTable />
+      </div>
     </div>
-    </div>
-
-  )
-}
+  );
+};
 
 export default Contact;

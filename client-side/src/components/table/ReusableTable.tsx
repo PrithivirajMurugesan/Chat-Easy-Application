@@ -1,73 +1,63 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { InputText } from 'primereact/inputtext';
-import { Column } from 'primereact/column';
-import { CustomerService } from '../table-tabView/all-contact/CustomerService';
+import React, { useRef, useState, useEffect } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+
+interface ColumnProps {
+  field: string;
+  header: string;
+  body?: (rowData: any) => JSX.Element | string; // For custom rendering of column cells
+  sortable?: boolean;
+  className?: string;
+}
 
 interface ReusableTableProps {
-  data?: any[];
-  columns?: { field: string; header: string; body?: (rowData: any) => JSX.Element }[];
-  globalFilterFields?: string[];
-  onRowClick?: (rowData: any) => void;
-  rowsPerPageOptions?: number[];
-  defaultRows?: number;
+  data: any[]; // The array of objects representing the data for the table
+  columns: ColumnProps[]; // The array of column definitions
+  header?: string | JSX.Element; // The optional header for the table
+  paginator?: boolean; // To enable or disable pagination
+  defaultRows?: number; // The default number of rows to display
+  rowsPerPageOptions?: number[]; // Options for rows per page dropdown
+  filters?: Record<string, any>; // Filter meta for the table (e.g., global filter)
+  globalFilterFields?: string[]; // Fields to apply global filtering to
+  emptyMessage?: string; // Message to display when no records are found
+  onRowClick?: (data: any) => void; // Optional event handler for row clicks
 }
 
 const ReusableTable: React.FC<ReusableTableProps> = ({
   data,
+  header,
+  paginator = true,
   columns,
+  filters,
+  emptyMessage = "No records found.",
   globalFilterFields,
   onRowClick,
   rowsPerPageOptions = [10, 25, 50],
-  defaultRows = 10
+  defaultRows = 10,
 }) => {
-  const [filters, setFilters] = useState({
-    global: { value: null },
-  });
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
-
-  const onGlobalFilterChange = (e: any) => {
-    const value = e.target.value;
-    let _filters = { ...filters };
-
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
-  };
-
-  const renderHeader = () => {
-    return (
-      <div className="flex justify-between items-center">
-        <h4>Data Table</h4>
-        <div>
-          <InputText
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Global Search"
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const header = renderHeader();
-
   return (
     <div className="card">
       <DataTable
         value={data}
-        paginator
+        paginator={paginator}
         header={header}
         rows={defaultRows}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         rowsPerPageOptions={rowsPerPageOptions}
         globalFilterFields={globalFilterFields}
-        // filters={filters}
-        emptyMessage="No records found."
+        filters={filters}
+        emptyMessage={emptyMessage}
         onRowClick={(e) => onRowClick && onRowClick(e.data)}
       >
         {columns?.map((col, index) => (
-          <Column key={index} field={col.field} header={col.header} body={col.body} />
+          <Column
+            className={col.className}
+            key={index}
+            field={col.field}
+            header={col.header}
+            body={col.body}
+            sortable={col.sortable}
+          />
         ))}
       </DataTable>
     </div>
