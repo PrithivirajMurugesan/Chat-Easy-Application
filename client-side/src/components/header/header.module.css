@@ -1,0 +1,45 @@
+.main_header {
+    @apply bg-[#ffffff] px-5 py-[6px];
+    border: #E5E9EB solid 1px;
+}
+.header_items {
+    @apply flex justify-between items-center;
+}
+.logo {
+    @apply cursor-pointer;
+}
+.logo_expand {
+    @apply flex items-center gap-10;
+}
+.expandable {
+    @apply cursor-pointer md:min-w-[30px] px-[7px] py-[5px];
+}
+.expandable_active {
+    @apply bg-[#F0F0FD] rounded-[6px];
+}
+.expandable:hover {
+    @apply bg-[#F0F0FD] rounded-[6px];
+}
+.main_search {
+    @apply md:w-[375px] rounded-[50px] py-[5px] px-[12px];
+    border: #E5E9EB solid 1px;
+}
+.upgrade_button {
+    @apply pr-[18px];
+}
+.upgrade_button button{
+    @apply py-[3px] px-3 rounded-[50px] bg-[#6366F1] flex items-center gap-[6px];
+}
+.notify_icon {
+    @apply mr-[6px] cursor-pointer md:min-w-[30px] px-[7px] py-[5px];
+}
+.notify_icon:hover {
+    @apply bg-[#F0F0FD] rounded-[6px];
+}
+.user_credentials {
+    @apply flex items-center cursor-pointer;
+}
+.user_interface {
+    @apply flex items-center gap-1 p-1 rounded-[100px];
+    border: #E5E9EB solid 1px;
+}

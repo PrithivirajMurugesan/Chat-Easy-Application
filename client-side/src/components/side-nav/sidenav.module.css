@@ -1,0 +1,182 @@
+.side_nav {
+  @apply p-3 flex flex-col items-start bg-[#fff];
+  border-right: #e5e9eb solid 1px;
+  position: relative;
+}
+
+.side_nav_info {
+  width: 40px; /* Collapsed width */
+  transition: width 0.3s ease; /* Add smooth transition for width */
+  /* overflow: hidden; Hide content that exceeds the width */
+  height: calc(100vh - 49.2px);
+  scrollbar-width: none;
+  overflow: auto;
+
+}
+.expanded .profile_card {
+  left: 170px;
+}
+.profile_card {
+  min-width: 276px;
+  position: absolute;
+  top: 10px;
+  left: 70px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 14px;
+  z-index: 1000;
+  border: #e5e9eb solid 1px;
+  box-shadow: 5px 12px 24px 0px #28171333;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.main_profile_info {
+  @apply px-[16px] pt-[16px] flex flex-col gap-2;
+}
+.user_information {
+  display: flex;
+  gap: 14px;
+  border-bottom: #e5e9eb solid 1px;
+  padding-bottom: 16px;
+}
+.user_profile_info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.user_profile_name {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #000;
+}
+.user_plan {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8c8c8c;
+  line-height: 20px;
+}
+.user_profile_options {
+  @apply pb-[10px] border-b border-b-[#E5E9EB] border-solid px-4;
+}
+.profile_options_list {
+  @apply py-[10px] flex gap-2 cursor-pointer;
+}
+.profile_options_list span {
+  @apply text-[14px] text-[#48535B] font-medium leading-[18px];
+}
+.add_workspace {
+  @apply px-[10px] pt-[2px] pb-[10px];
+}
+.add_new_workspace {
+  @apply rounded-[4px] bg-[#F7F5F5] flex justify-center items-center;
+}
+.add_workspace_btn {
+  @apply text-[#6366F1] text-[14px] font-medium shadow-none outline-none py-[9px] px-4;
+}
+.user_switch_profile {
+  @apply border-b border-b-[#E5E9EB] border-solid pb-[10px];
+}
+.user_switch_profile_text {
+  @apply text-[12px] text-[#48535B] font-medium leading-[18px] pl-4;
+}
+.switch_profile_users {
+  @apply flex flex-col gap-1 mt-[2px];
+}
+.seperate_users {
+  @apply py-4 px-[10px] cursor-pointer;
+}
+.seperate_users:hover {
+  @apply bg-[#F7F7FE];
+}
+.individual_user_profile {
+  @apply flex gap-[14px] items-center;
+}
+.seperate_users_info {
+  @apply flex flex-col items-start justify-start gap-1;
+}
+.individual_profile_info {
+  @apply flex items-center gap-[20px] text-[12px] font-normal leading-[18px] text-[#8C8C8C];
+}
+.seperate_user_plan {
+  @apply italic;
+}
+
+.side_nav_info.expanded {
+  width: 140px; /* Expanded width */
+}
+
+.side_nav_info p {
+  opacity: 0;
+  transition: opacity 0.3s ease; /* Smooth opacity transition for text */
+}
+
+.side_nav_info.expanded p {
+  opacity: 1;
+}
+.main_profile {
+  @apply relative cursor-pointer flex gap-[6px] items-center text-grey-aa text-[13px] font-medium leading-5;
+}
+.main_profile_down {
+  @apply md:w-[13px] absolute bg-[#fff] rounded-[50px] right-0 top-[28px];
+}
+.expandable_down {
+  @apply top-4;
+}
+.side_nav_options {
+  @apply pt-[14px] flex flex-col gap-[6px] text-grey-aa;
+}
+.set_options_first,
+.set_options_second,
+.set_options_third {
+  @apply flex flex-col gap-[14px];
+}
+/* .side_nav_options .set_options_first,
+.side_nav_options .set_options_second,
+.side_nav_options .set_options_third {
+  padding-bottom: 10px;
+} */
+/* divide-y divide-[#E5E9EB] */
+.individual_side_nav_options {
+  @apply py-2 pl-[10px] pr-[10px] cursor-pointer flex gap-[10px] items-center text-[13px] font-normal leading-[19.5px] mb-[10px];
+}
+.individual_side_nav_options p {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 1s ease-in-out;
+  min-width: 0;
+}
+.individual_side_nav_options svg {
+  transition: transform 0.3s ease; /* Optional: smooth transform */
+}
+
+.individual_side_nav_options:hover svg {
+  transform: scale(1.1); /* Optional: enlarge icon on hover */
+}
+
+.expanded {
+  max-height: 500px !important; /* Adjust to fit the content */
+  /* min-width: 132px; */
+}
+/* Default */
+.individual_side_nav_options svg {
+  fill: #fff;
+}
+.individual_side_nav_options svg path {
+  stroke: #48535b;
+}
+/* Hover */
+.individual_side_nav_options:hover {
+  @apply bg-[#F0F0FD] rounded-xl;
+}
+/* Active */
+.individual_side_nav_options.active_nav {
+  @apply bg-[#6366F1] rounded-[12px] text-[#fff];
+}
+.individual_side_nav_options.active_nav svg {
+  fill: #fff;
+}
+.active_nav svg path {
+  stroke: #6366f1;
+}

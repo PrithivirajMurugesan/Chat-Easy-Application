@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 body {
-  background-color: #ece5dd;
+  /* background-color: #ece5dd; */
   color: #fff;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 pre {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
-/* .epr-main {
-   position: absolute;
-   left: 0;
-   bottom: 70px;
-} */
+
+@layer utilities {
 .p-splitter-gutter {
   @apply bg-[#f9fafb] h-full;
 }
@@ -28,8 +28,120 @@ pre {
   @apply shadow-none;
 }
 
+/* Profile styles starts*/
+.p-button-label {
+  @apply font-medium;
+}
+.p-button-icon {
+  @apply font-bold;
+}
+
+/* Profile styles ends*/
+
+
+/* Contact Table Over-ride Styles Starts */
+
+.p-tabview-panels {
+  @apply pl-4;
+}
+.p-datatable {
+  @apply border-[#E5E9EB] border-solid border-[1px] rounded-md;
+}
+.p-datatable-header {
+  @apply bg-white;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom: #e5e9eb solid 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.p-paginator-bottom {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.p-datatable-table,
+th,
+td {
+  border-bottom: #e5e9eb solid 1px;
+  border-collapse: collapse;
+  padding: 8px;
+}
+.p-datatable .p-datatable-thead > tr > th {
+  @apply bg-white;
+}
+.p-tabview-nav-container {
+  @apply border-b-[#EAEAEB] border-b-[1px] border-solid;
+}
+
+.p-unselectable-text a {
+  @apply text-[#252C32] text-[14px] font-normal leading-[24px];
+}
+.p-tabview-nav .p-tabview-selected a {
+  @apply text-[#6366F1] text-[14px] font-semibold leading-[24px];
+}
+.p-tabview-nav .p-tabview-selected a {
+  @apply border-b-[#6366F1] border-b-[3px] border-solid;
+}
+
+.p-checkbox .p-checkbox-box {
+  @apply border-[#B0BABF] border-solid border-[1px] bg-[#F6F8F9] rounded-[4px];
+}
+
+.p-checkbox [data-p-highlight|="true"] {
+  @apply bg-[#6366f1];
+}
+
+.p-column-title {
+  @apply text-[#48535B] text-[14px] font-normal leading-[24px];
+}
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  @apply text-[#48535B];
+}
+.p-datatable-tbody tr {
+  @apply hover:bg-[#F7F7FE] cursor-pointer;
+}
+.p-paginator-current, .p-paginator-pages, .p-dropdown-label {
+  @apply text-[14px] font-normal leading-[24px];
+}
+/* Contact Table Over-ride Styles Ends */
+
+/* Sidebar Styles Starts  */
+
+.p-sidebar-right .p-sidebar {
+  @apply md:w-[405px];
+}
+.p-sidebar-header {
+  @apply bg-[#261C2C] text-white text-[14px] font-medium py-[14px] px-5;
+}
+.p-sidebar-icons {
+  @apply gap-[14px];
+}
+.p-sidebar-content {
+  @apply overflow-auto;
+  scrollbar-width: none;
+}
+
+.p-dropdown-trigger {
+  @apply justify-start md:w-[20px];
+}
+/* Sidebar Styles Ends  */
+.p-dropdown-label {
+  @apply text-grey-aa;
+}
+.p-dropdown-label.p-placeholder {
+  @apply text-[#8C8C8C] text-[14px] font-normal;
+}
+
 @media only screen and (max-width: 480px) {
   .p-splitter-horizontal {
     width: 100% !important;
   }
+}
+}
+.user_details h4,
+.user_details p,
+.more {
+    @apply text-grey-aa;
 }
