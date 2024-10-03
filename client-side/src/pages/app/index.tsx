@@ -15,7 +15,7 @@ const App: React.FC = () => {
       <Header onToggleExpand={handleToggleExpand} />
       <div className={Style.Conversation_container}>
         <SideNav isExpanded={isExpanded} />
-        <h1 className={Style.main_head}>Home</h1>
+        <h1 className={Style.main_head}>Home Page</h1>
       </div>
     </div>
   );
